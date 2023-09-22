@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+body {
+    background-color: #2c2c2c;
+    color: white;
+    font-family: "Poppins", sans-serif !important;
+}
+
+.dash-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.section-title {
+    color: #888888;
+    font-size: 16px;
+}
+
+.custom-card {
+    background-color: #3e3e3e;
+    /* Add a drop shadow, 4px y down and 4px x down, blur of 4px, no spread */
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 0.75em 0.25em 0.75em 0.25em;
+    margin: 0.25em 0.1em 0.25em 0.1em;
+}
+
+.lg-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.lg-card-desc {
+    color: #ffffff;
+    opacity: 50%;
+}
+
+.lg-button {
+    font-weight: bold;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border: none;
+    padding: 0;
+    border-radius: 8px;
+    padding: 0.5em 1em 0.5em 1em;
+    color: #ffffff;
+
+    transition: 300ms;
+    width: 100%;
+}
+
+.lg-button-off {
+    background-color: #5a90e2;
+}
+
+.transition {
+    transition: 300ms;
+}
+
+.lg-button-on {
+    background-color: #666666;
+}
+
+.lg-button:hover {
+    filter: brightness(1.1);
+}
+
+.on-off {
+    transition: 300ms;
+    font-size: 16px;
+}
+
+.off {
+    color: #ff8888;
+}
+
+.on {
+    color: #88ff88;
+}
+
+.icon-on {
+    color: #ffffff;
+    /* add a glow effect, like make the icon appear better */
+    filter: drop-shadow(0 0 8px #ffff00);
+}
+
+.icon-off {
+    color: #333333;
+}
