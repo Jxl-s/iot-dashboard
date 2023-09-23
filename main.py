@@ -1,10 +1,11 @@
 # Modules
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    import _gpio as GPIO
+
 from flask import Flask, render_template
 import json
-
-import _gpio as GPIO
-
-# import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -38,12 +39,6 @@ def set_light(status):
     GPIO.output(PINS["LED"], STATES["light"])
 
     return "OK", 200
-
-
-# Me testing a fake raspberry pi on my macbook
-@app.route("/board")
-def board():
-    return GPIO.print_board()
 
 
 if __name__ == "__main__":
