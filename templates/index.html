@@ -7,7 +7,7 @@
     <title>Control Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="./static/styles.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
 </head>
 
 <body class="d-flex">
@@ -24,10 +24,74 @@
             <b class="dash-title">Control Dashboard</b>
         </div>
 
+        <!-- Sensors section -->
+        <div class="section-title">Sensor Status</div>
+        <section class="row mb-3">
+            <div class="col-12 col-md-3">
+                <div class="custom-card row align-items-center justify-content-between">
+                    <div class="col-12 col-lg-9">
+                        <p class="lg-card-smtitle">Temperature</p>
+                        <p class="lg-card-highlight">10.9 °C</p>
+                    </div>
+                    <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="custom-card row align-items-center justify-content-between">
+                    <div class="col-12 col-lg-9">
+                        <p class="lg-card-smtitle">Humidity</p>
+                        <p class="lg-card-highlight">57.53%</p>
+                    </div>
+                    <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="custom-card row align-items-center justify-content-between">
+                    <div class="col-12 col-lg-9">
+                        <p class="lg-card-smtitle">Light Intensity</p>
+                        <p class="lg-card-highlight">9,302</p>
+                    </div>
+                    <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="custom-card row align-items-center justify-content-between">
+                    <div class="col-12 col-lg-9">
+                        <p class="lg-card-smtitle">Devices in Area</p>
+                        <p class="lg-card-highlight">32</p>
+                    </div>
+                    <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- Controls section -->
         <div class="section-title">Controls</div>
-        <section class="row">
-            <div class="col-12 col-md-6 mb-4">
+        <section class="row mb-3">
+            <div class="col-12 col-md-6">
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-10">
                         <p class="lg-card-title">Fans
@@ -54,7 +118,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-6">
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-10">
                         <p class="lg-card-title">Lights
@@ -72,8 +136,8 @@
                         {% endif %}
                     </div>
                     <div class="col-0 col-lg-2 d-none d-lg-block justify-content-center">
-                        <svg id="light-icon-indicator" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" style="height: 100%"
+                        <svg id="light-icon-indicator" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="height: 100%"
                             class="transition {% if states.light %} light-icon-on {% else %} icon-off {% endif %}">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
@@ -88,8 +152,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    <script src="./static/scripts/light.js"></script>
-    <script src="./static/scripts/fan.js"></script>
+    <script src="../static/scripts/light.js"></script>
+    <script src="../static/scripts/fan.js"></script>
 </body>
 
 </html>

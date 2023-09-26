@@ -38,9 +38,24 @@ body {
     color: white;
 }
 
+
+.lg-card-smtitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 4px;
+}
+
+
 .lg-card-desc {
     color: #ffffff;
     opacity: 50%;
+}
+
+.lg-card-highlight {
+    color: #8EAEDE;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .lg-button {
