@@ -13,7 +13,7 @@ LED.setOn = async function () {
         .text("(ON)");
 
     // Icon indicator
-    $("#light-led-indicator")
+    $("#light-icon-indicator")
         .addClass("icon-on")
         .removeClass("icon-off")
 
@@ -37,7 +37,7 @@ LED.setOff = async function () {
         .text("(OFF)");
 
     // Icon indicator
-    $("#light-led-indicator")
+    $("#light-icon-indicator")
         .removeClass("icon-on")
         .addClass("icon-off")
 
