@@ -11,7 +11,6 @@ body {
 .sidebar {
     height: 100vh;
     width: 200px;
-    transition: 300ms;
 }
 
 .dash-title {
@@ -53,7 +52,6 @@ body {
     padding: 0.5em 1em 0.5em 1em;
     color: #ffffff;
 
-    transition: 300ms;
     width: 100%;
 }
 
@@ -62,7 +60,7 @@ body {
 }
 
 .transition {
-    transition: 300ms;
+    transition: 200ms;
 }
 
 .lg-button-on {
@@ -74,7 +72,6 @@ body {
 }
 
 .on-off {
-    transition: 300ms;
     font-size: 16px;
 }
 
@@ -86,10 +83,15 @@ body {
     color: #88ff88;
 }
 
-.icon-on {
+.light-icon-on {
     color: #ffffff;
     /* add a glow effect, like make the icon appear better */
     filter: drop-shadow(0 0 8px #ffff00);
+}
+
+.fan-icon-on {
+    color: #ffffff;
+    filter: drop-shadow(0 0 8px #0000ff);
 }
 
 .icon-off {

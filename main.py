@@ -20,7 +20,7 @@ if not PINS:
 
 GPIO.setup(PINS["LED"], GPIO.OUT)
 
-STATES = {"light": False}
+STATES = {"light": False, "fan": False}
 
 # App setup
 app = Flask(__name__, static_folder="static", template_folder="templates")
@@ -29,6 +29,15 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 @app.route("/")
 def index():
     return render_template("index.html", states=STATES)
+
+
+# Fan
+@app.route("/set-fan/<int:status>", methods=["POST"])
+def set_fan(status):
+    STATES["fan"] = bool(status)
+
+    # TODO: Activate the fans
+    return "OK", 200
 
 
 # Light
