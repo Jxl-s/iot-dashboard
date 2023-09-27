@@ -5,11 +5,14 @@ except ImportError:
     import _gpio as GPIO
 
 from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit
+
 import json
 import filters
 
 # App setup
 app = Flask(__name__, static_folder="static", template_folder="templates")
+socketio = SocketIO(app, async_mode=None)
 
 app.jinja_env.filters["number_with_commas"] = filters.number_with_commas
 app.jinja_env.filters["round_two_decimals"] = filters.round_two_decimals
@@ -60,6 +63,7 @@ def index():
         "index.html", states=STATES, sensors=SENSOR_VALUES, user=user
     )
 
+
 # Favourites
 @app.route("/set-favourites", methods=["POST"])
 def set_favourites():
@@ -68,6 +72,7 @@ def set_favourites():
 
     # TODO: Save the favourites to the user's profile
     return "OK", 200
+
 
 # Fan
 @app.route("/set-fan/<int:status>", methods=["POST"])

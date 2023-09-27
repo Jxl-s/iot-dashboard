@@ -49,7 +49,9 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Humidity</p>
-                        <div class="lg-card-highlight" id="sensor-hum-val" iot-val="{{ sensors.humidity }}">{{ sensors.humidity|round_two_decimals }}%</div>
+                        <div class="lg-card-highlight" id="sensor-hum-val" iot-val="{{ sensors.humidity }}">
+                            {{ sensors.humidity|round_two_decimals }}%
+                        </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#8EAEDE">
@@ -88,7 +90,9 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Devices in Area</p>
-                        <div class="lg-card-highlight" id="sensor-devices-val" iot-val="{{ sensors.devices }}">{{ sensors.devices|number_with_commas }}</div>
+                        <div class="lg-card-highlight" id="sensor-devices-val" iot-val="{{ sensors.devices }}">
+                            {{ sensors.devices|number_with_commas }}
+                        </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="0.75"
@@ -154,14 +158,16 @@
                                 <span class="ms-2">Temperature</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.temperature <
-                                    sensors.temperature %} style="width: 32px;color: #C25B5B;" transform="rotate(180)"
-                                    {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
+                                <svg id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
+                                    user.favorites.temperature < sensors.temperature %}
+                                    style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}
+                                    style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span id="favourite-temperature-value" class="lg-card-highlight ms-2 favourites-value">{{
+                                <span id="favourite-temperature-value"
+                                    class="lg-card-highlight ms-2 favourites-value">{{
                                     user.favorites.temperature|round_two_decimals }}
                                     °C</span>
                                 <input value="{{user.favorites.temperature}}" id="favourite-temperature-input"
@@ -188,10 +194,10 @@
                                 <span class="ms-2">Humidity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.humidity <
-                                    sensors.humidity %} style="width: 32px;color: #C25B5B;" transform="rotate(180)" {%
-                                    else %} style="width: 32px;color: #88FF88;" {% endif %}>
+                                <svg id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
+                                    user.favorites.humidity < sensors.humidity %} style="width: 32px;color: #C25B5B;"
+                                    transform="rotate(180)" {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
@@ -213,10 +219,11 @@
                                 <span class="ms-2">Light Intensity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.light_intensity <
-                                    sensors.light_intensity %} style="width: 32px;color: #C25B5B;"
-                                    transform="rotate(180)" {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
+                                <svg id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
+                                    user.favorites.light_intensity < sensors.light_intensity %}
+                                    style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}
+                                    style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
@@ -229,7 +236,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <button id="submit-favourites-button" class="ms-2 mt-2 w-100 transition lg-button lg-button-off text-center hide"
+                        <button id="submit-favourites-button"
+                            class="ms-2 mt-2 w-100 transition lg-button lg-button-off text-center hide"
                             style="background-color: #5fad5f;">
                             Submit
                         </button>
@@ -301,13 +309,20 @@
         </section>
     </div>
 
+    <!-- JQuery & Bootstrap -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+        integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+        crossorigin="anonymous"></script>
+    <!-- My scripts -->
     <script src="../static/scripts/light.js"></script>
     <script src="../static/scripts/fan.js"></script>
     <script src="../static/scripts/favourites.js"></script>
+    <script src="../static/scripts/sensors.js"></script>
 </body>
 
 </html>
