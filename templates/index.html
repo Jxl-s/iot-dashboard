@@ -31,7 +31,9 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Temperature</p>
-                        <div class="lg-card-highlight">10.9 °C</div>
+                        <div class="lg-card-highlight" id="sensor-temp-val" iot-val="{{ sensors.temperature }}">
+                            {{ sensors.temperature|round_two_decimals }} °C
+                        </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
@@ -47,7 +49,7 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Humidity</p>
-                        <div class="lg-card-highlight">57.53%</div>
+                        <div class="lg-card-highlight" id="sensor-hum-val" iot-val="{{ sensors.humidity }}">{{ sensors.humidity|round_two_decimals }}%</div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#8EAEDE">
@@ -69,7 +71,9 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Light Intensity</p>
-                        <div class="lg-card-highlight">9,302</div>
+                        <div class="lg-card-highlight" id="sensor-light-val" iot-val="{{ sensors.light_intensity }}">
+                            {{ sensors.light_intensity|number_with_commas }} lux
+                        </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="0.75"
@@ -84,7 +88,7 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Devices in Area</p>
-                        <div class="lg-card-highlight">32</div>
+                        <div class="lg-card-highlight" id="sensor-devices-val" iot-val="{{ sensors.devices }}">{{ sensors.devices|number_with_commas }}</div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="0.75"
@@ -103,27 +107,39 @@
             <div class="col-12 col-lg-6 flex-fill">
                 <div class="custom-card d-flex">
                     <!-- Profile picture -->
-                    <img src="../static/images/cool-cat.jpg" alt="profile" class="profile-picture"
-                        style="height: 128px;">
+                    {% if user %}
+                    <img src="{{ user.avatar }}" alt="profile" class="profile-picture" style="height: 128px;">
+                    {% endif %}
                     <div class="flex-grow w-100 px-3">
                         <div class="d-flex justify-content-between mb-3">
-                            <div class="lg-card-lgtitle">Jia_123</div>
+                            {% if user %}
+                            <div class="lg-card-lgtitle">{{user.name}}</div>
                             <button class="transition lg-button lg-button-off text-center"
-                                style="width: 200px; background-color: #C25B5B; padding-top: 4px; padding-bottom: 4px;">Sign
-                                Out</button>
+                                style="width: 200px; background-color: #C25B5B; padding-top: 4px; padding-bottom: 4px;">
+                                Sign Out
+                            </button>
+                            {% else %}
+                            <div class="lg-card-lgtitle">Please scan your ID card</div>
+                            {% endif %}
                         </div>
 
-                        <div class="lg-card-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in
-                            nisl
-                            quam. Curabitur leo nulla, porta consequat consectetur ...</div>
+                        <div class="lg-card-desc">
+                            {% if user %}
+                            {{user.description}}
+                            {% else %}
+                            You are not logged in. Please log in to access a large range of features,
+                            such as managing your favourite configuration.
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
+            {% if user %}
             <div class="col-12 col-lg-6 flex-fill">
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="d-flex justify-content-between mb-3">
                         <div class="lg-card-lgtitle">Favourites</div>
-                        <button class="transition lg-button lg-button-off text-center"
+                        <button id="edit-favourites-button" class="transition lg-button lg-button-off text-center"
                             style="width: 200px; padding-top: 4px; padding-bottom: 4px;">Edit</button>
                     </div>
                     <div class="row">
@@ -138,13 +154,21 @@
                                 <span class="ms-2">Temperature</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" style="width: 32px; color: #88FF88;">
+                                <svg id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.temperature <
+                                    sensors.temperature %} style="width: 32px;color: #C25B5B;" transform="rotate(180)"
+                                    {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span class="lg-card-highlight ms-2">24.0 °C</span>
+                                <span id="favourite-temperature-value" class="lg-card-highlight ms-2 favourites-value">{{
+                                    user.favorites.temperature|round_two_decimals }}
+                                    °C</span>
+                                <input value="{{user.favorites.temperature}}" id="favourite-temperature-input"
+                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                    style="background: transparent" />
                             </div>
+
                         </div>
                         <div class="col-4">
                             <div class="d-flex justify-content-start align-items-center mb-1">
@@ -164,13 +188,19 @@
                                 <span class="ms-2">Humidity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" style="width: 32px; color: #C25B5B;"
-                                    transform="rotate(180)">
+                                <svg id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.humidity <
+                                    sensors.humidity %} style="width: 32px;color: #C25B5B;" transform="rotate(180)" {%
+                                    else %} style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span class="lg-card-highlight ms-2">34.0%</span>
+                                <span id="favourite-humidity-value" class="lg-card-highlight ms-2 favourites-value">{{
+                                    user.favorites.humidity|round_two_decimals
+                                    }}%</span>
+                                <input value="{{user.favorites.humidity}}" id="favourite-humidity-input"
+                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                    style="background: transparent" />
                             </div>
                         </div>
                         <div class="col-4">
@@ -183,19 +213,31 @@
                                 <span class="ms-2">Light Intensity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" style="width: 32px; color: #C25B5B;"
-                                    transform="rotate(180)">
+                                <svg id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" {% if user.favorites.light_intensity <
+                                    sensors.light_intensity %} style="width: 32px;color: #C25B5B;"
+                                    transform="rotate(180)" {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span class="lg-card-highlight ms-2">3,221</span>
+                                <span id="favourite-light-value" class="lg-card-highlight ms-2 favourites-value">{{
+                                    user.favorites.light_intensity|number_with_commas }} lux</span>
+                                <input value="{{user.favorites.light_intensity}}" id="favourite-light-input"
+                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                    style="background: transparent" />
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <button id="submit-favourites-button" class="ms-2 mt-2 w-100 transition lg-button lg-button-off text-center hide"
+                            style="background-color: #5fad5f;">
+                            Submit
+                        </button>
                     </div>
 
                 </div>
             </div>
+            {% endif %}
         </section>
 
         <!-- Controls section -->
@@ -265,6 +307,7 @@
         crossorigin="anonymous"></script>
     <script src="../static/scripts/light.js"></script>
     <script src="../static/scripts/fan.js"></script>
+    <script src="../static/scripts/favourites.js"></script>
 </body>
 
 </html>

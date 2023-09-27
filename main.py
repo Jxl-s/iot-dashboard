@@ -4,13 +4,20 @@ try:
 except ImportError:
     import _gpio as GPIO
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import json
+import filters
 
+# App setup
+app = Flask(__name__, static_folder="static", template_folder="templates")
+
+app.jinja_env.filters["number_with_commas"] = filters.number_with_commas
+app.jinja_env.filters["round_two_decimals"] = filters.round_two_decimals
+
+# GPIO setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-# GPIO setup
 PINS = None
 with open("pins.json") as f:
     PINS = json.load(f)
@@ -21,15 +28,46 @@ if not PINS:
 GPIO.setup(PINS["LED"], GPIO.OUT)
 
 STATES = {"light": False, "fan": False}
+SENSOR_VALUES = {
+    "temperature": 10.9,
+    "humidity": 57.5349,
+    "light_intensity": 9302,
+    "devices": 32,
+}
 
-# App setup
-app = Flask(__name__, static_folder="static", template_folder="templates")
 
-
+# App routes
 @app.route("/")
 def index():
-    return render_template("index.html", states=STATES)
+    # TODO: Check if the user is logged in, through request cookies or a session.
 
+    # If they are logged in, get their data from the database, otherwise
+    # use False as user.
+
+    # Temporary data to test with
+    user = {
+        "name": "Jiaxuanli_123",
+        "description": "The main user of this computer",
+        "avatar": "/static/images/default-user.jpg",
+        "favorites": {
+            "temperature": 230,
+            "humidity": 42.2,
+            "light_intensity": 33333,
+        },
+    }
+
+    return render_template(
+        "index.html", states=STATES, sensors=SENSOR_VALUES, user=user
+    )
+
+# Favourites
+@app.route("/set-favourites", methods=["POST"])
+def set_favourites():
+    data = request.get_json()
+    print(data)
+
+    # TODO: Save the favourites to the user's profile
+    return "OK", 200
 
 # Fan
 @app.route("/set-fan/<int:status>", methods=["POST"])
@@ -50,4 +88,4 @@ def set_light(status):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=3333)
+    app.run(host="0.0.0.0", port=3333)
