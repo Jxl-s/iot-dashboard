@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 body {
     background-color: #2c2c2c;
@@ -28,7 +28,7 @@ body {
     /* Add a drop shadow, 4px y down and 4px x down, blur of 4px, no spread */
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    padding: 0.75em 0.25em 0.75em 0.25em;
+    padding: 1em 0.25em 1em 0.25em;
     margin: 0.25em 0.1em 0.25em 0.1em;
 }
 
@@ -38,7 +38,6 @@ body {
     color: white;
 }
 
-
 .lg-card-smtitle {
     font-size: 16px;
     font-weight: bold;
@@ -46,16 +45,15 @@ body {
     margin-bottom: 4px;
 }
 
-
 .lg-card-desc {
     color: #ffffff;
     opacity: 50%;
 }
 
 .lg-card-highlight {
-    color: #8EAEDE;
+    color: #8eaede;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .lg-button {
@@ -111,4 +109,9 @@ body {
 
 .icon-off {
     color: #333333;
+}
+
+.profile-picture {
+    margin-left: 16px;
+    border-radius: 8px;
 }
