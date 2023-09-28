@@ -53,10 +53,10 @@ def index():
         "name": "Jiaxuanli_123",
         "description": "The main user of this computer",
         "avatar": "/static/images/default-user.jpg",
-        "favorites": {
-            "temperature": 230,
+        "favourites": {
+            "temperature": 20.4,
             "humidity": 42.2,
-            "light_intensity": 33333,
+            "light_intensity": 4722,
         },
     }
 

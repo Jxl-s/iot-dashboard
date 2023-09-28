@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <link rel="icon" type="image/x-icon" href="../static/favicon.ico">
 </head>
 
 <body class="d-flex">
@@ -17,7 +18,7 @@
     <div class="p-5 w-100">
         <!-- Title -->
         <div class="d-flex align-items-center mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            <svg class="transition hamburg-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" cursor="pointer"
                 stroke="currentColor" style="width: 32px; height: 32px; margin-right: 24px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
@@ -143,7 +144,7 @@
                 <div class="custom-card row align-items-center justify-content-between">
                     <div class="d-flex justify-content-between mb-3">
                         <div class="lg-card-lgtitle">Favourites</div>
-                        <button id="edit-favourites-button" class="transition lg-button lg-button-off text-center"
+                        <button id="edit-favs-btn" class="transition lg-button lg-button-off text-center"
                             style="width: 200px; padding-top: 4px; padding-bottom: 4px;">Edit</button>
                     </div>
                     <div class="row">
@@ -158,20 +159,20 @@
                                 <span class="ms-2">Temperature</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg class="transition" id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="fav-temp-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
-                                    user.favorites.temperature < sensors.temperature %}
+                                    user.favourites.temperature < sensors.temperature %}
                                     style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}
                                     style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span id="favourite-temperature-value"
-                                    class="lg-card-highlight ms-2 favourites-value">{{
-                                    user.favorites.temperature|round_two_decimals }}
+                                <span id="fav-temp-val"
+                                    class="lg-card-highlight ms-2 fav-val">{{
+                                    user.favourites.temperature|round_two_decimals }}
                                     °C</span>
-                                <input value="{{user.favorites.temperature}}" id="favourite-temperature-input"
-                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                <input value="{{user.favourites.temperature}}" id="fav-temp-input"
+                                    class="w-100 lg-card-highlight ms-2 fav-input hide" type="number"
                                     style="background: transparent" />
                             </div>
 
@@ -194,18 +195,18 @@
                                 <span class="ms-2">Humidity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg class="transition" id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="fav-hum-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
-                                    user.favorites.humidity < sensors.humidity %} style="width: 32px;color: #C25B5B;"
+                                    user.favourites.humidity < sensors.humidity %} style="width: 32px;color: #C25B5B;"
                                     transform="rotate(180)" {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span id="favourite-humidity-value" class="lg-card-highlight ms-2 favourites-value">{{
-                                    user.favorites.humidity|round_two_decimals
+                                <span id="fav-hum-val" class="lg-card-highlight ms-2 fav-val">{{
+                                    user.favourites.humidity|round_two_decimals
                                     }}%</span>
-                                <input value="{{user.favorites.humidity}}" id="favourite-humidity-input"
-                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                <input value="{{user.favourites.humidity}}" id="fav-hum-input"
+                                    class="w-100 lg-card-highlight ms-2 fav-input hide" type="number"
                                     style="background: transparent" />
                             </div>
                         </div>
@@ -219,24 +220,24 @@
                                 <span class="ms-2">Light Intensity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg class="transition" id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="fav-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
-                                    user.favorites.light_intensity < sensors.light_intensity %}
+                                    user.favourites.light_intensity < sensors.light_intensity %}
                                     style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}
                                     style="width: 32px;color: #88FF88;" {% endif %}>
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
                                 </svg>
-                                <span id="favourite-light-value" class="lg-card-highlight ms-2 favourites-value">{{
-                                    user.favorites.light_intensity|number_with_commas }} lux</span>
-                                <input value="{{user.favorites.light_intensity}}" id="favourite-light-input"
-                                    class="w-100 lg-card-highlight ms-2 favourites-input hide" type="number"
+                                <span id="fav-light-val" class="lg-card-highlight ms-2 fav-val">{{
+                                    user.favourites.light_intensity|number_with_commas }} lux</span>
+                                <input value="{{user.favourites.light_intensity}}" id="fav-light-input"
+                                    class="w-100 lg-card-highlight ms-2 fav-input hide" type="number"
                                     style="background: transparent" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <button id="submit-favourites-button"
+                        <button id="submit-fav-btn"
                             class="ms-2 mt-2 w-100 transition lg-button lg-button-off text-center hide"
                             style="background-color: #5fad5f;">
                             Submit
