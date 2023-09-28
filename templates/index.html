@@ -32,7 +32,7 @@
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Temperature</p>
                         <div class="lg-card-highlight" id="sensor-temp-val" iot-val="{{ sensors.temperature }}">
-                            {{ sensors.temperature|round_two_decimals }} °C
+                            <span>{{ sensors.temperature|round_two_decimals }}</span> °C
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
@@ -50,7 +50,7 @@
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Humidity</p>
                         <div class="lg-card-highlight" id="sensor-hum-val" iot-val="{{ sensors.humidity }}">
-                            {{ sensors.humidity|round_two_decimals }}%
+                            <span>{{ sensors.humidity|round_two_decimals }}</span>%
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
@@ -74,7 +74,7 @@
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Light Intensity</p>
                         <div class="lg-card-highlight" id="sensor-light-val" iot-val="{{ sensors.light_intensity }}">
-                            {{ sensors.light_intensity|number_with_commas }} lux
+                            <span>{{ sensors.light_intensity|number_with_commas }}</span> lux
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
@@ -91,7 +91,7 @@
                     <div class="col-12 col-lg-9">
                         <p class="lg-card-smtitle">Devices in Area</p>
                         <div class="lg-card-highlight" id="sensor-devices-val" iot-val="{{ sensors.devices }}">
-                            {{ sensors.devices|number_with_commas }}
+                            <span>{{ sensors.devices|number_with_commas }}</span>
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
@@ -158,7 +158,7 @@
                                 <span class="ms-2">Temperature</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="favourite-temperature-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
                                     user.favorites.temperature < sensors.temperature %}
                                     style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}
@@ -194,7 +194,7 @@
                                 <span class="ms-2">Humidity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="favourite-humidity-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
                                     user.favorites.humidity < sensors.humidity %} style="width: 32px;color: #C25B5B;"
                                     transform="rotate(180)" {% else %} style="width: 32px;color: #88FF88;" {% endif %}>
@@ -219,7 +219,7 @@
                                 <span class="ms-2">Light Intensity</span>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <svg id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="transition" id="favourite-light-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" {% if
                                     user.favorites.light_intensity < sensors.light_intensity %}
                                     style="width: 32px;color: #C25B5B;" transform="rotate(180)" {% else %}

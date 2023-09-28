@@ -6,6 +6,7 @@ except ImportError:
 
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
+from threading import Thread
 
 import json
 import filters
@@ -68,7 +69,6 @@ def index():
 @app.route("/set-favourites", methods=["POST"])
 def set_favourites():
     data = request.get_json()
-    print(data)
 
     # TODO: Save the favourites to the user's profile
     return "OK", 200
@@ -91,6 +91,22 @@ def set_light(status):
 
     return "OK", 200
 
+# TODO: remove this, and actually listen to sensor changes
+def send_dummy_data():
+    import random
+    import time
+
+    while True:
+        SENSOR_VALUES["temperature"] = random.randint(10, 30)
+        SENSOR_VALUES["humidity"] = random.randint(30, 80)
+        SENSOR_VALUES["light_intensity"] = random.randint(1000, 10000)
+        SENSOR_VALUES["devices"] = random.randint(0, 50)
+
+        socketio.emit("sensor_update", SENSOR_VALUES)
+        time.sleep(0.5)
+
 
 if __name__ == "__main__":
+    # TODO: use the actuatly sensor function
+    Thread(target=send_dummy_data).start()
     app.run(host="0.0.0.0", port=3333)

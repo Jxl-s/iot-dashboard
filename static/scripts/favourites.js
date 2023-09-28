@@ -41,6 +41,34 @@ Favourites.cancel = () => {
     $("#submit-favourites-button").addClass("hide");
 };
 
+Favourites.updateArrows = async () => {
+    const data = {
+        temperature: previousValues["favourite-temperature-input"],
+        humidity: previousValues["favourite-humidity-input"],
+        light: previousValues["favourite-light-input"],
+    };
+
+    // Compare to find the arrows
+    const tempVal = parseFloat($("#sensor-temp-val").attr("iot-val"));
+    const humVal = parseFloat($("#sensor-hum-val").attr("iot-val"));
+    const lightVal = parseFloat($("#sensor-light-val").attr("iot-val"));
+
+    // Temperature
+    const newTempTransform = data.temperature < tempVal ? "rotate(180)" : "rotate(0)";
+    const newTempColor = data.temperature < tempVal ? "#C25B5B" : "#88FF88";
+    $("#favourite-temperature-svg").attr("transform", newTempTransform).css("color", newTempColor);
+
+    // Humidity
+    const newHumTransform = data.humidity < humVal ? "rotate(180)" : "rotate(0)";
+    const newHumColor = data.humidity < humVal ? "#C25B5B" : "#88FF88";
+    $("#favourite-humidity-svg").attr("transform", newHumTransform).css("color", newHumColor);
+
+    // Light
+    const newLightTransform = data.light < lightVal ? "rotate(180)" : "rotate(0)";
+    const newLightColor = data.light < lightVal ? "#C25B5B" : "#88FF88";
+    $("#favourite-light-svg").attr("transform", newLightTransform).css("color", newLightColor);
+}
+
 Favourites.submit = async () => {
     // If one of the fields are empty, don't allow it to go further
     if ($("#favourite-temperature-input").val() === "") return;
@@ -71,25 +99,11 @@ Favourites.submit = async () => {
     $("#favourite-humidity-value").text(`${roundTwoDecimals(data.humidity)}%`);
     $("#favourite-light-value").text(`${numberWithCommas(data.light)} lux`);
 
-    // Compare to find the arrows
-    const tempVal = parseFloat($("#sensor-temp-val").attr("iot-val"));
-    const humVal = parseFloat($("#sensor-hum-val").attr("iot-val"));
-    const lightVal = parseFloat($("#sensor-light-val").attr("iot-val"));
+    $(".favourites-input").each((index, element) => {
+        previousValues[element.id] = element.value;
+    });
 
-    // Temperature
-    const newTempTransform = data.temperature < tempVal ? "rotate(180)" : "rotate(0)";
-    const newTempColor = data.temperature < tempVal ? "#C25B5B" : "#88FF88";
-    $("#favourite-temperature-svg").attr("transform", newTempTransform).css("color", newTempColor);
-
-    // Humidity
-    const newHumTransform = data.humidity < humVal ? "rotate(180)" : "rotate(0)";
-    const newHumColor = data.humidity < humVal ? "#C25B5B" : "#88FF88";
-    $("#favourite-humidity-svg").attr("transform", newHumTransform).css("color", newHumColor);
-
-    // Light
-    const newLightTransform = data.light < lightVal ? "rotate(180)" : "rotate(0)";
-    const newLightColor = data.light < lightVal ? "#C25B5B" : "#88FF88";
-    $("#favourite-light-svg").attr("transform", newLightTransform).css("color", newLightColor);
+    Favourites.updateArrows();
 
     // Make the inputs disappear
     $("#edit-favourites-button").text("Edit").css("background-color", "");;
