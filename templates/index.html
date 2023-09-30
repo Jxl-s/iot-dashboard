@@ -113,23 +113,29 @@
             <div class="col-12 col-lg-6 flex-fill">
                 <div class="custom-card d-flex h-100">
                     <!-- Profile picture -->
-                    <img src="/" alt="profile" id="user-pfp" class="profile-picture login-required"
-                        style="height: 128px;">
-                    <div class="flex-grow w-100 px-3">
-                        <div class="d-flex justify-content-between mb-3">
-                            <div class="lg-card-lgtitle login-required" id="user-name">Guest</div>
-                            <button class="transition lg-button lg-button-off text-center login-required"
-                                style="width: 200px; background-color: #C25B5B; padding-top: 4px; padding-bottom: 4px;">
-                                Sign Out
-                            </button>
-                            <div class="lg-card-lgtitle login-none">Please scan your ID card</div>
-                        </div>
+                    <div id="user-loading" class="w-100 d-none align-items-center justify-content-center flex-column">
+                        <div class="spin"></div>
+                        <div class="text-muted mt-2">Loading profile...</div>
+                    </div>
+                    <div id="user-loaded" class="w-100">
+                        <img src="/" alt="profile" id="user-pfp" class="profile-picture login-required"
+                            style="height: 128px;">
+                        <div class="flex-grow w-100 px-3">
+                            <div class="d-flex justify-content-between mb-3 w-100">
+                                <div class="lg-card-lgtitle" id="user-name">Please scan your ID card</div>
+                                <button class="transition lg-button lg-button-off text-center login-required"
+                                    style="width: 200px; background-color: #C25B5B; padding-top: 4px; padding-bottom: 4px;">
+                                    Sign Out
+                                </button>
+                            </div>
 
-                        <div class="lg-card-desc" id="user-desc">
-                            You are not logged in. Please log in to access a large range of features,
-                            such as managing your favourite configuration.
+                            <div class="lg-card-desc" id="user-desc">
+                                You are not logged in. Please log in to access a large range of features,
+                                such as managing your favourite configuration.
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="col-12 mt-2 mt-lg-0 col-lg-6 flex-fill login-required">

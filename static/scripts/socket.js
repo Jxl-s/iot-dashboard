@@ -28,4 +28,6 @@ $(document).ready(async function () {
     socket.on("light_update", (status) => StateFunctions.updateLight(status));
     socket.on("fan_update", (status) => StateFunctions.updateFan(status));
     socket.on("user_update", (user) => StateFunctions.updateUser(user));
+
+    State._initialized = true;
 });

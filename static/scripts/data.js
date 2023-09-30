@@ -1,4 +1,5 @@
 const State = {
+    _initialized: false,
     sensors: {
         temperature: 0,
         humidity: 0,
@@ -62,12 +63,28 @@ class StateFunctions {
 
         // TODO: Change some visibility stuff
         if (State.user) {
-            $(".login-required").removeClass("login-required");
-            $(".login-none").css("display", "none");
+            // Show the loading animation
+            $("#user-loaded").removeClass("d-flex").addClass("d-none");
+            $("#user-loading").removeClass("d-none").addClass("d-flex");
 
-            $("#user-pfp").attr("src", State.user.avatar);
-            $("#user-name").text(State.user.name);
-            $("#user-desc").text(State.user.description);
+            const waitTimeout = State._initialized ? 1000 : 500;
+            setTimeout(() => {
+                // Hide the loading animation
+                $("#user-loading").removeClass("d-flex").addClass("d-none");
+                $("#user-loaded").removeClass("d-none").addClass("d-flex");
+
+                $(".login-required").css('display', "block");
+
+                $("#user-pfp").attr("src", State.user.avatar);
+                $("#user-name").text(State.user.name);
+                $("#user-desc").text(State.user.description);
+            }, waitTimeout);
+
+        } else {
+            $(".login-required").css('display', "none");
+
+            $("#user-name").text("Please scan your ID card");
+            $("#user-desc").text("You are not logged in. Please log in to access a large range of features, such as managing your favourite configuration.");
         }
     }
 
