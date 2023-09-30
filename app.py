@@ -4,28 +4,21 @@ try:
 except ImportError:
     import _gpio as GPIO
 
+import json
+
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from threading import Thread
 
-import json
+# My packages
+from pins import PINS, setup as pins_setup
 
 # App setup
 app = Flask(__name__, static_folder="static", template_folder="templates")
 socketio = SocketIO(app, async_mode=None)
 
 # GPIO setup
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-
-PINS = None
-with open("pins.json") as f:
-    PINS = json.load(f)
-
-if not PINS:
-    raise Exception("Pins file not found")
-
-GPIO.setup(PINS["LED"], GPIO.OUT)
+pins_setup()
 
 # TODO: these will most likely change because of different project requirements
 STATES = {"light": False, "fan": False}
@@ -53,7 +46,7 @@ def index():
     return render_template("index.html")
 
 
-# GET /get-data: Gets the initial page data
+# Gets the initial page data
 @app.route("/get-data")
 def get_data():
     # TODO: Check if the user is logged in, through request cookies or a session.
@@ -64,9 +57,10 @@ def get_data():
     return response, 200, {"Content-Type": "application/json"}
 
 
-# Favourites
+# Changes the user's preference
 @app.route("/set-favourites", methods=["POST"])
 def set_favourites():
+    # TODO: Check if the user is logged in, only update their entries
     data = request.get_json()
 
     # Make sure fields are present
@@ -126,8 +120,7 @@ def send_dummy_data():
         socketio.emit("sensor_update", SENSOR_VALUES)
         time.sleep(0.5)
 
-
 if __name__ == "__main__":
-    # TODO: use the actuatly sensor function
+    # TODO: use the real sensor function
     Thread(target=send_dummy_data).start()
     app.run(host="0.0.0.0", port=3333)
