@@ -27,4 +27,5 @@ $(document).ready(async function () {
     socket.on("sensor_update", (data) => StateFunctions.updateSensors(data));
     socket.on("light_update", (status) => StateFunctions.updateLight(status));
     socket.on("fan_update", (status) => StateFunctions.updateFan(status));
+    socket.on("user_update", (user) => StateFunctions.updateUser(user));
 });

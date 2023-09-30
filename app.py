@@ -120,6 +120,7 @@ def send_dummy_data():
         socketio.emit("sensor_update", SENSOR_VALUES)
         time.sleep(0.5)
 
+
 if __name__ == "__main__":
     # TODO: use the real sensor function
     Thread(target=send_dummy_data).start()

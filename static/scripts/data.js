@@ -76,7 +76,7 @@ class StateFunctions {
         State.light = status;
 
         // Update displays
-        State.light ? LED.setOn() : LED.setOff();
+        LED.setState(State.light);
     }
 
     static updateFan(status) {
@@ -84,6 +84,6 @@ class StateFunctions {
         State.fan = status;
 
         // Update displays
-        State.fan ? Fan.setOn() : Fan.setOff();
+        Fan.setState(State.fan);
     }
 }

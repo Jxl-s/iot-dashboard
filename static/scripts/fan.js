@@ -1,42 +1,31 @@
 const Fan = {};
 
-Fan.setOn = async function () {
-    // Text indicator
+Fan.setState = function (isOn) {
+    const fanAddClass = isOn ? "on" : "off";
+    const fanRemoveClass = isOn ? "off" : "on";
+    const fanText = isOn ? "(ON)" : "(OFF)";
+
+    const iconAddClass = isOn ? "fan-icon-on" : "icon-off";
+    const iconRemoveClass = isOn ? "icon-off" : "fan-icon-on";
+
+    const buttonAddClass = isOn ? "lg-button-on" : "lg-button-off";
+    const buttonRemoveClass = isOn ? "lg-button-off" : "lg-button-on";
+    const buttonText = isOn ? "Turn OFF" : "Turn ON";
+
     $("#fan-indicator")
-        .addClass("on")
-        .removeClass("off")
-        .text("(ON)");
+        .addClass(fanAddClass)
+        .removeClass(fanRemoveClass)
+        .text(fanText);
 
-    // Icon indicator
     $("#fan-icon-indicator")
-        .addClass("fan-icon-on")
-        .removeClass("icon-off")
+        .addClass(iconAddClass)
+        .removeClass(iconRemoveClass)
 
-    // Button
     $("#fan-toggle")
-        .addClass("lg-button-on")
-        .removeClass("lg-button-off")
-        .text("Turn OFF");
+        .addClass(buttonAddClass)
+        .removeClass(buttonRemoveClass)
+        .text(buttonText);
 }
-
-Fan.setOff = async function () {
-    // Text indicator
-    $("#fan-indicator")
-        .removeClass("on")
-        .addClass("off")
-        .text("(OFF)");
-
-    // Icon indicator
-    $("#fan-icon-indicator")
-        .removeClass("fan-icon-on")
-        .addClass("icon-off")
-
-    // Button
-    $("#fan-toggle")
-        .removeClass("lg-button-on")
-        .addClass("lg-button-off")
-        .text("Turn ON");
-};
 
 $(document).ready(function () {
     $("#fan-toggle").click(() => {
