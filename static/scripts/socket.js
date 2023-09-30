@@ -1,31 +1,30 @@
 const Sensors = {};
 
 $(document).ready(async function () {
-    // Start listening to websocket
+    // Should fetch the initial data before listening to websocket
+    const initRes = await fetch("/get-data", {
+        method: "GET",
+        credentials: "include",
+    });
+
+    if (initRes.status !== 200) return console.error("Failed to fetch initial data");
+    const data = await initRes.json();
+
+    // Set the initial values
+    StateFunctions.updateSensors(data.sensors);
+    StateFunctions.updateUser(data.user);
+    StateFunctions.updateLight(data.states.light);
+    StateFunctions.updateFan(data.states.fan);
+
+    if (data.user) {
+        StateFunctions.updateFavourites(data.user.favourites);
+    }
+
+    // Start listening to socket events
     const socket = io();
     document._socket = socket;
 
-    socket.on("sensor_update", (data) => {
-        // Update the fields
-        $("#sensor-temp-val").attr("iot-val", data.temperature);
-        $("#sensor-hum-val").attr("iot-val", data.humidity);
-        $("#sensor-light-val").attr("iot-val", data.light_intensity);
-        $("#sensor-devices-val").attr("iot-val", data.devices);
-
-        $("#sensor-temp-val > span").text(roundTwoDecimals(data.temperature));
-        $("#sensor-hum-val > span").text(roundTwoDecimals(data.humidity));
-        $("#sensor-light-val > span").text(numberWithCommas(data.light_intensity));
-        $("#sensor-devices-val > span").text(numberWithCommas(data.devices));
-
-        // Update arrows
-        Favourites.updateArrows();
-    });
-
-    socket.on("light_update", (status) => {
-        status ? LED.setOn() : LED.setOff();
-    })
-
-    socket.on("fan_update", (status) => {
-        status ? Fan.setOn() : Fan.setOff();
-    })
+    socket.on("sensor_update", (data) => StateFunctions.updateSensors(data));
+    socket.on("light_update", (status) => StateFunctions.updateLight(status));
+    socket.on("fan_update", (status) => StateFunctions.updateFan(status));
 });

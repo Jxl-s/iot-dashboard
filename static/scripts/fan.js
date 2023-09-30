@@ -38,10 +38,8 @@ Fan.setOff = async function () {
         .text("Turn ON");
 };
 
-$(document).ready(async function () {
-    $("#fan-toggle").click(async function () {
-        // New status will be False if it's currently ON
-        const newStatus = $("#fan-indicator").text() != "(ON)";
-        document._socket?.emit("set_fan", newStatus);
+$(document).ready(function () {
+    $("#fan-toggle").click(() => {
+        document._socket?.emit("set_fan", !State.fan)
     });
 });

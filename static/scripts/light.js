@@ -41,7 +41,6 @@ LED.setOff = function () {
 $(document).ready(async function () {
     $("#light-toggle").click(async function () {
         // New status will be False if it's currently ON
-        const newStatus = $("#light-indicator").text() != "(ON)";
-        document._socket?.emit("set_light", newStatus);
+        document._socket?.emit("set_light", !State.light);
     });
 });

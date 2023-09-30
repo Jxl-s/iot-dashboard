@@ -142,3 +142,7 @@ body {
 
     border-bottom: 1px solid #666666;
 }
+
+.login-required {
+    display: none;
+}

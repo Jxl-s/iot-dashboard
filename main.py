@@ -9,14 +9,10 @@ from flask_socketio import SocketIO, emit
 from threading import Thread
 
 import json
-import filters
 
 # App setup
 app = Flask(__name__, static_folder="static", template_folder="templates")
 socketio = SocketIO(app, async_mode=None)
-
-app.jinja_env.filters["number_with_commas"] = filters.number_with_commas
-app.jinja_env.filters["round_two_decimals"] = filters.round_two_decimals
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)
@@ -31,6 +27,7 @@ if not PINS:
 
 GPIO.setup(PINS["LED"], GPIO.OUT)
 
+# TODO: these will most likely change because of different project requirements
 STATES = {"light": False, "fan": False}
 SENSOR_VALUES = {
     "temperature": 10.9,
@@ -38,31 +35,33 @@ SENSOR_VALUES = {
     "light_intensity": 9302,
     "devices": 32,
 }
+USER = {
+    "name": "Jiaxuanli_123",
+    "description": "The main user of this computer",
+    "avatar": "/static/images/default-user.jpg",
+    "favourites": {
+        "temperature": 20.4,
+        "humidity": 42.2,
+        "light_intensity": 4722,
+    },
+}
 
 
-# App routes
+# Dashboard page
 @app.route("/")
 def index():
+    return render_template("index.html")
+
+
+# GET /get-data: Gets the initial page data
+@app.route("/get-data")
+def get_data():
     # TODO: Check if the user is logged in, through request cookies or a session.
 
     # If they are logged in, get their data from the database, otherwise
     # use False as user.
-
-    # Temporary data to test with
-    user = {
-        "name": "Jiaxuanli_123",
-        "description": "The main user of this computer",
-        "avatar": "/static/images/default-user.jpg",
-        "favourites": {
-            "temperature": 20.4,
-            "humidity": 42.2,
-            "light_intensity": 4722,
-        },
-    }
-
-    return render_template(
-        "index.html", states=STATES, sensors=SENSOR_VALUES, user=user
-    )
+    response = json.dumps({"states": STATES, "sensors": SENSOR_VALUES, "user": USER})
+    return response, 200, {"Content-Type": "application/json"}
 
 
 # Favourites
@@ -70,12 +69,31 @@ def index():
 def set_favourites():
     data = request.get_json()
 
-    # TODO: Save the favourites to the user's profile
+    # Make sure fields are present
+    if not data["temperature"] or not data["humidity"] or not data["light"]:
+        return "Missing data", 400
+
+    # Make sure fields are valid
+    if not isinstance(data["temperature"], (int, float)):
+        return "Invalid temperature", 400
+
+    if not isinstance(data["humidity"], (int, float)):
+        return "Invalid humidity", 400
+
+    if not isinstance(data["light"], (int, float)):
+        return "Invalid light", 400
+
+    # Save the favourites to the array
+    USER["favourites"]["temperature"] = data["temperature"]
+    USER["favourites"]["humidity"] = data["humidity"]
+    USER["favourites"]["light_intensity"] = data["light"]
+
+    # TODO: Save the favourites to the user's profile in the future
     return "OK", 200
 
 
 # Fan
-@socketio.on('set_fan')
+@socketio.on("set_fan")
 def set_fan(status):
     STATES["fan"] = bool(status)
 
@@ -85,14 +103,16 @@ def set_fan(status):
 
 
 # Light
-@socketio.on('set_light')
+@socketio.on("set_light")
 def set_light(status):
     STATES["light"] = bool(status)
     GPIO.output(PINS["LED"], STATES["light"])
 
     socketio.emit("light_update", STATES["light"])
 
+
 # TODO: remove this, and actually listen to sensor changes
+# this will also most likely be gone because of project requirements
 def send_dummy_data():
     import random
     import time
