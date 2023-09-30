@@ -1,11 +1,3 @@
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function roundTwoDecimals(x) {
-    return Math.round(x * 100) / 100;
-}
-
 const Favourites = {};
 
 const previousValues = {};
@@ -67,8 +59,6 @@ Favourites.updateArrows = async () => {
     const newLightTransform = data.light < lightVal ? "rotate(180)" : "rotate(0)";
     const newLightColor = data.light < lightVal ? "#C25B5B" : "#88FF88";
     $("#fav-light-svg").attr("transform", newLightTransform).css("color", newLightColor);
-    
-    console.log("Hi");
 }
 
 Favourites.submit = async () => {

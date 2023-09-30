@@ -3,6 +3,7 @@ const Sensors = {};
 $(document).ready(async function () {
     // Start listening to websocket
     const socket = io();
+    document._socket = socket;
 
     socket.on("sensor_update", (data) => {
         // Update the fields
@@ -19,4 +20,12 @@ $(document).ready(async function () {
         // Update arrows
         Favourites.updateArrows();
     });
+
+    socket.on("light_update", (status) => {
+        status ? LED.setOn() : LED.setOff();
+    })
+
+    socket.on("fan_update", (status) => {
+        status ? Fan.setOn() : Fan.setOff();
+    })
 });

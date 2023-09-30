@@ -1,11 +1,6 @@
-const FAN = {};
+const Fan = {};
 
-FAN.setOn = async function () {
-    const res = await fetch("/set-fan/1", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
-
+Fan.setOn = async function () {
     // Text indicator
     $("#fan-indicator")
         .addClass("on")
@@ -24,12 +19,7 @@ FAN.setOn = async function () {
         .text("Turn OFF");
 }
 
-FAN.setOff = async function () {
-    const res = await fetch("/set-fan/0", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
-
+Fan.setOff = async function () {
     // Text indicator
     $("#fan-indicator")
         .removeClass("on")
@@ -50,7 +40,8 @@ FAN.setOff = async function () {
 
 $(document).ready(async function () {
     $("#fan-toggle").click(async function () {
-        // Different action depending on the current state
-        $("#fan-indicator").text() == "(ON)" ? FAN.setOff() : FAN.setOn();
+        // New status will be False if it's currently ON
+        const newStatus = $("#fan-indicator").text() != "(ON)";
+        document._socket?.emit("set_fan", newStatus);
     });
 });

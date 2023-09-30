@@ -1,11 +1,6 @@
 const LED = {};
 
-LED.setOn = async function () {
-    const res = await fetch("/set-light/1", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
-
+LED.setOn = function () {
     // Text indicator
     $("#light-indicator")
         .addClass("on")
@@ -24,12 +19,7 @@ LED.setOn = async function () {
         .text("Turn OFF");
 }
 
-LED.setOff = async function () {
-    const res = await fetch("/set-light/0", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
-
+LED.setOff = function () {
     // Text indicator
     $("#light-indicator")
         .removeClass("on")
@@ -50,7 +40,8 @@ LED.setOff = async function () {
 
 $(document).ready(async function () {
     $("#light-toggle").click(async function () {
-        // Different action depending on the current state
-        $("#light-indicator").text() == "(ON)" ? LED.setOff() : LED.setOn();
+        // New status will be False if it's currently ON
+        const newStatus = $("#light-indicator").text() != "(ON)";
+        document._socket?.emit("set_light", newStatus);
     });
 });

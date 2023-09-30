@@ -75,21 +75,22 @@ def set_favourites():
 
 
 # Fan
-@app.route("/set-fan/<int:status>", methods=["POST"])
+@socketio.on('set_fan')
 def set_fan(status):
     STATES["fan"] = bool(status)
 
     # TODO: Activate the fans
-    return "OK", 200
+
+    socketio.emit("fan_update", STATES["fan"])
 
 
 # Light
-@app.route("/set-light/<int:status>", methods=["POST"])
+@socketio.on('set_light')
 def set_light(status):
     STATES["light"] = bool(status)
     GPIO.output(PINS["LED"], STATES["light"])
 
-    return "OK", 200
+    socketio.emit("light_update", STATES["light"])
 
 # TODO: remove this, and actually listen to sensor changes
 def send_dummy_data():
