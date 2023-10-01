@@ -35,9 +35,10 @@ Favourites.updateArrows = async () => {
     // Temperature
     const tempDiff = Math.abs(State.favourites.temperature - State.sensors.temperature);
     const isTempLower = State.favourites.temperature < State.sensors.temperature;
-    const newTempTransform = isTempLower ? "rotate(180)" : "rotate(0)";
-    const newTempColor = isTempLower ? "#C25B5B" : "#88FF88";
-    $("#fav-temp-svg").attr("transform", newTempTransform).css("color", newTempColor);
+
+    $("#fav-temp-svg")
+        .attr("transform", isTempLower ? "rotate(180)" : "rotate(0)")
+        .css("color", isTempLower ? "#C25B5B" : "#88FF88");
 
     if (tempDiff < TEMP_TRESHOLD) {
         $("#fav-temp-ok").show();
@@ -46,13 +47,14 @@ Favourites.updateArrows = async () => {
         $("#fav-temp-ok").hide();
         $("#fav-temp-svg").show();
     }
-    
+
     // Humidity
     const humDiff = Math.abs(State.favourites.humidity - State.sensors.humidity);
     const isHumLower = State.favourites.humidity < State.sensors.humidity;
-    const newHumTransform = isHumLower ? "rotate(180)" : "rotate(0)";
-    const newHumColor = isHumLower ? "#C25B5B" : "#88FF88";
-    $("#fav-hum-svg").attr("transform", newHumTransform).css("color", newHumColor);
+
+    $("#fav-hum-svg")
+        .attr("transform", isHumLower ? "rotate(180)" : "rotate(0)")
+        .css("color", isHumLower ? "#C25B5B" : "#88FF88");
 
     if (humDiff < HUM_TRESHOLD) {
         $("#fav-hum-ok").show();
@@ -65,9 +67,10 @@ Favourites.updateArrows = async () => {
     // Light
     const lightDiff = Math.abs(State.favourites.light_intensity - State.sensors.light_intensity);
     const isLightLower = State.favourites.light_intensity < State.sensors.light_intensity;
-    const newLightTransform = isLightLower ? "rotate(180)" : "rotate(0)";
-    const newLightColor = isLightLower ? "#C25B5B" : "#88FF88";
-    $("#fav-light-svg").attr("transform", newLightTransform).css("color", newLightColor);
+
+    $("#fav-light-svg")
+        .attr("transform", isLightLower ? "rotate(180)" : "rotate(0)")
+        .css("color", isLightLower ? "#C25B5B" : "#88FF88");
 
     if (lightDiff < LIGHT_TRESHOLD) {
         $("#fav-light-ok").show();

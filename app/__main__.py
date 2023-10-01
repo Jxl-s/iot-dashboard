@@ -2,11 +2,11 @@
 try:
     import RPi.GPIO as GPIO
 except ImportError:
-    import _gpio as GPIO
+    import Mock.GPIO as GPIO
 
 import json
 
-from flask import Flask, render_template, request
+from flask import Flask, request, send_file
 from flask_socketio import SocketIO
 from threading import Thread
 
@@ -14,7 +14,7 @@ from threading import Thread
 from pins import PINS, setup as pins_setup
 
 # App setup
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__, static_folder="../static")
 socketio = SocketIO(app, async_mode=None)
 
 # GPIO setup
@@ -43,7 +43,7 @@ USER = {
 # Dashboard page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return send_file("../static/index.html")
 
 
 # Gets the initial page data

@@ -1,7 +1,7 @@
 try:
     import RPi.GPIO as GPIO
-except ImportError:
-    import _gpio as GPIO
+except:
+    import Mock.GPIO as GPIO
 
 # Set the pins here
 PINS = {

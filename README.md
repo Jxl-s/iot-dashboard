@@ -9,5 +9,5 @@ pip install -r requirements.txt
 
 Then, run the following command to start the application
 ```
-python app.py
+python app
 ```
