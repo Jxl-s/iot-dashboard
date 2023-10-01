@@ -163,3 +163,20 @@ body {
 #time-label {
     font-size: 24px;
 }
+
+@keyframes ok-svg-colors {
+    0% {
+        fill: #69a5ff;
+    }
+    50% {
+        fill: #dae9ff;
+    }
+    100% {
+        fill: #69a5ff;
+    }
+}
+
+.ok-svg {
+    animation: ok-svg-colors 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+    display: none;
+}

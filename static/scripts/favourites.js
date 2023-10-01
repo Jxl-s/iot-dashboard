@@ -1,5 +1,9 @@
 const Favourites = {};
 
+const TEMP_TRESHOLD = 1;
+const HUM_TRESHOLD = 5;
+const LIGHT_TRESHOLD = 50;
+
 Favourites.edit = () => {
     $("#edit-favs-btn").text("Cancel").css("background-color", "#C25B5B");
 
@@ -29,22 +33,49 @@ Favourites.cancel = () => {
 
 Favourites.updateArrows = async () => {
     // Temperature
+    const tempDiff = Math.abs(State.favourites.temperature - State.sensors.temperature);
     const isTempLower = State.favourites.temperature < State.sensors.temperature;
     const newTempTransform = isTempLower ? "rotate(180)" : "rotate(0)";
     const newTempColor = isTempLower ? "#C25B5B" : "#88FF88";
     $("#fav-temp-svg").attr("transform", newTempTransform).css("color", newTempColor);
 
+    if (tempDiff < TEMP_TRESHOLD) {
+        $("#fav-temp-ok").show();
+        $("#fav-temp-svg").hide();
+    } else {
+        $("#fav-temp-ok").hide();
+        $("#fav-temp-svg").show();
+    }
+    
     // Humidity
+    const humDiff = Math.abs(State.favourites.humidity - State.sensors.humidity);
     const isHumLower = State.favourites.humidity < State.sensors.humidity;
     const newHumTransform = isHumLower ? "rotate(180)" : "rotate(0)";
     const newHumColor = isHumLower ? "#C25B5B" : "#88FF88";
     $("#fav-hum-svg").attr("transform", newHumTransform).css("color", newHumColor);
 
+    if (humDiff < HUM_TRESHOLD) {
+        $("#fav-hum-ok").show();
+        $("#fav-hum-svg").hide();
+    } else {
+        $("#fav-hum-ok").hide();
+        $("#fav-hum-svg").show();
+    }
+
     // Light
+    const lightDiff = Math.abs(State.favourites.light_intensity - State.sensors.light_intensity);
     const isLightLower = State.favourites.light_intensity < State.sensors.light_intensity;
     const newLightTransform = isLightLower ? "rotate(180)" : "rotate(0)";
     const newLightColor = isLightLower ? "#C25B5B" : "#88FF88";
     $("#fav-light-svg").attr("transform", newLightTransform).css("color", newLightColor);
+
+    if (lightDiff < LIGHT_TRESHOLD) {
+        $("#fav-light-ok").show();
+        $("#fav-light-svg").hide();
+    } else {
+        $("#fav-light-ok").hide();
+        $("#fav-light-svg").show();
+    }
 }
 
 Favourites.submit = async () => {
