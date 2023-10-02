@@ -6,16 +6,20 @@ function roundTwoDecimals(x) {
     return Math.round(x * 100) / 100;
 }
 
-function getTimeString() {
-    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function getDayString() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date().toLocaleDateString(undefined, options);
-}
 
 $(document).ready(function () {
+    const getTimeString = () => new Date().toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+    });
+
+    const getDayString = () => new Date().toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
     // Update time loop
     const updateLabels = () => {
         $("#time-label").text(getTimeString());
@@ -23,5 +27,5 @@ $(document).ready(function () {
     }
 
     updateLabels();
-    setInterval(updateLabels, 200);
+    setInterval(updateLabels, 1000);
 });
