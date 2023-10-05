@@ -77,7 +77,7 @@ body {
 }
 
 .transition {
-    transition: 200ms;
+    /* transition: 200ms; */
 }
 
 .lg-button-on {

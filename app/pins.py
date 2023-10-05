@@ -8,7 +8,7 @@ PINS = {
     "LED": 17,
 }
 
-
 # Define a setup method
 def setup():
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(PINS["LED"], GPIO.OUT)
