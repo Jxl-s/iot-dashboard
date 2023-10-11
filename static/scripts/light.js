@@ -1,56 +1,35 @@
 const LED = {};
 
-LED.setOn = async function () {
-    const res = await fetch("/set-light/1", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
+LED.setState = function (isOn) {
+    const lightAddClass = isOn ? "on" : "off";
+    const lightRemoveClass = isOn ? "off" : "on";
+    const lightText = isOn ? "(ON)" : "(OFF)";
 
-    // Text indicator
+    const iconAddClass = isOn ? "light-icon-on" : "icon-off";
+    const iconRemoveClass = isOn ? "icon-off" : "light-icon-on";
+
+    const buttonAddClass = isOn ? "lg-button-on" : "lg-button-off";
+    const buttonRemoveClass = isOn ? "lg-button-off" : "lg-button-on";
+    const buttonText = isOn ? "Turn OFF" : "Turn ON";
+
     $("#light-indicator")
-        .addClass("on")
-        .removeClass("off")
-        .text("(ON)");
+        .addClass(lightAddClass)
+        .removeClass(lightRemoveClass)
+        .text(lightText);
 
-    // Icon indicator
     $("#light-icon-indicator")
-        .addClass("icon-on")
-        .removeClass("icon-off")
+        .addClass(iconAddClass)
+        .removeClass(iconRemoveClass)
 
-    // Button
     $("#light-toggle")
-        .addClass("lg-button-on")
-        .removeClass("lg-button-off")
-        .text("Turn OFF");
+        .addClass(buttonAddClass)
+        .removeClass(buttonRemoveClass)
+        .text(buttonText);
 }
-
-LED.setOff = async function () {
-    const res = await fetch("/set-light/0", {
-        method: "POST"
-    });
-    if (res.status != 200) return;
-
-    // Text indicator
-    $("#light-indicator")
-        .removeClass("on")
-        .addClass("off")
-        .text("(OFF)");
-
-    // Icon indicator
-    $("#light-icon-indicator")
-        .removeClass("icon-on")
-        .addClass("icon-off")
-
-    // Button
-    $("#light-toggle")
-        .removeClass("lg-button-on")
-        .addClass("lg-button-off")
-        .text("Turn ON");
-};
 
 $(document).ready(async function () {
     $("#light-toggle").click(async function () {
-        // Different action depending on the current state
-        $("#light-indicator").text() == "(ON)" ? LED.setOff() : LED.setOn();
+        // New status will be False if it's currently ON
+        document._socket?.emit("set_light", !State.light);
     });
 });
