@@ -5,6 +5,7 @@ except ImportError:
     import Mock.GPIO as GPIO
 
 import json
+import time
 
 from flask import Flask, request, send_file
 from flask_socketio import SocketIO
@@ -12,6 +13,12 @@ from threading import Thread
 
 # My packages
 from pins import PINS, setup as pins_setup
+import email_client
+
+# Load dotenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # App setup
 app = Flask(__name__, static_folder="../static")
@@ -23,19 +30,21 @@ pins_setup()
 # TODO: these will most likely change because of different project requirements
 STATES = {"light": False, "fan": False}
 SENSOR_VALUES = {
-    "temperature": 10.9,
-    "humidity": 57.5349,
-    "light_intensity": 9302,
-    "devices": 32,
+    "temperature": 22,
+    "humidity": 57.53,
+    "light_intensity": 400,
+    "devices": 0,
 }
+
 USER = {
-    "name": "Jiaxuanli_123",
+    "name": "computer_user_123",
+    "email": "me@meeeee.com",
     "description": "The main user of this computer",
     "avatar": "/static/images/default-user.jpg",
     "favourites": {
-        "temperature": 20.4,
-        "humidity": 42.2,
-        "light_intensity": 4722,
+        "temperature": 10,
+        "humidity": 40,
+        "light_intensity": 4000,
     },
 }
 
@@ -49,15 +58,12 @@ def index():
 # Gets the initial page data
 @app.route("/get-data")
 def get_data():
-    # TODO: Check if the user is logged in, through request cookies or a session.
-
-    # If they are logged in, get their data from the database, otherwise
-    # use False as user.
+    # If they are not logged in, use False as user.
     response = json.dumps({"states": STATES, "sensors": SENSOR_VALUES, "user": USER})
     return response, 200, {"Content-Type": "application/json"}
 
 
-# Changes the user's preference
+# Changes the user's preference.
 @app.route("/set-favourites", methods=["POST"])
 def set_favourites():
     # TODO: Check if the user is logged in, only update their entries
@@ -109,7 +115,6 @@ def set_light(status):
 # this will also most likely be gone because of project requirements
 def send_dummy_data():
     import random
-    import time
 
     while True:
         SENSOR_VALUES["temperature"] = random.randint(10, 30)
@@ -118,10 +123,59 @@ def send_dummy_data():
         SENSOR_VALUES["devices"] = random.randint(0, 50)
 
         socketio.emit("sensor_update", SENSOR_VALUES)
-        time.sleep(0.5)
+        time.sleep(2)
+
+
+# This thread handles email-related actions
+def email_thread():
+    # How much time before re-sending an email
+    EMAIL_TIMEOUT = 60 * 2  # 2 minutes
+
+    # Indicates whether the email has already been sent, to prevent spamming
+    email_cooldown = {
+        "temperature": 0,
+        "light_intensity": 0,
+    }
+
+    while True:
+        cur_time = time.time()
+
+        # Handle light intensity
+        light = SENSOR_VALUES["light_intensity"]
+        prefered_light = USER["favourites"]["light_intensity"]
+
+        if light < prefered_light and email_cooldown["light_intensity"] <= cur_time:
+            # Change the light
+            set_light(True)
+
+            # Send the email
+            email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
+            email_client.send_light_email(USER["email"])
+            print("Sent light email!")
+
+        # Handle temperature
+        temp = SENSOR_VALUES["temperature"]
+        prefered_temp = USER["favourites"]["temperature"]
+
+        if temp > prefered_temp and email_cooldown["temperature"] <= cur_time:
+            # Send the email
+            email_cooldown["temperature"] = cur_time + EMAIL_TIMEOUT
+            email_client.send_temp_email(USER["email"], temp, prefered_temp)
+            print("Sent temperature email!")
+
+        # Check for a response from the temperature
+        response = email_client.check_temp_res(USER["email"])
+        if response:
+            print("User responded with YES")
+            set_fan(True)
+
+        # Delay the loop
+        time.sleep(1)
 
 
 if __name__ == "__main__":
     # TODO: use the real sensor function
     Thread(target=send_dummy_data).start()
+    Thread(target=email_thread).start()
+
     app.run(host="0.0.0.0", port=3333)
