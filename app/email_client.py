@@ -4,12 +4,9 @@ import imaplib
 import time
 
 from email.mime.text import MIMEText
-from enum import Enum
 
-
-class EmailType(Enum):
-    LIGHT = 1
-    TEMPERATURE = 1
+LIGHT_EMAIL_SUBJECT = "IntelliHouse - Light status change"
+TEMP_EMAIL_SUBJECT = "IntelliHouse - Temperature is high"
 
 
 # Just says "Light is ON, Time: hh:mm:ss"
@@ -21,7 +18,7 @@ def send_light_email(receiver_email: str):
     body = f"Light is ON, Time: {cur_time}"
 
     msg = MIMEText(body)
-    msg["Subject"] = "IntelliHouse - Light status change"
+    msg["Subject"] = LIGHT_EMAIL_SUBJECT
     msg["From"] = my_email
     msg["To"] = receiver_email
 
@@ -44,7 +41,7 @@ def send_temp_email(receiver_email: str, temp: float, prefered_temp: float):
     )
 
     msg = MIMEText(body)
-    msg["Subject"] = "IntelliHouse - Temperature is high"
+    msg["Subject"] = TEMP_EMAIL_SUBJECT
     msg["From"] = my_email
     msg["To"] = receiver_email
 
@@ -61,10 +58,12 @@ def check_temp_res(receiver_email: str):
 
     with imaplib.IMAP4_SSL("outlook.office365.com") as server:
         server.login(my_email, my_password)
-
-        # Check for new emails
         server.select("INBOX")
-        _, data = server.search(None, f'(FROM "{receiver_email}")')
+
+        # Search that it's from the receiver
+        _, data = server.search(
+            None, f'(FROM "{receiver_email}" SUBJECT "{TEMP_EMAIL_SUBJECT}")'
+        )
 
         # Go through, all the received emails. Check if one of them contains YES
         for num in data[0].split():
@@ -76,7 +75,7 @@ def check_temp_res(receiver_email: str):
             server.expunge()
 
             # Check if the message contains YES
-            if "YES" in msg:
+            if "YES" in msg.upper():
                 return True
 
     return False
