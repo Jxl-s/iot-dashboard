@@ -5,6 +5,7 @@ except ImportError:
     import Mock.GPIO as GPIO
 
 import json
+import os
 import time
 
 from flask import Flask, request, send_file
@@ -13,12 +14,14 @@ from threading import Thread
 
 # My packages
 from pins import PINS, setup as pins_setup
-import email_client
 
-# Load dotenv
 from dotenv import load_dotenv
 
+from utils.email import EmailClient
+
+# Load env, and setup the email client
 load_dotenv()
+email_client = EmailClient(os.environ["EMAIL_ADDRESS"], os.environ["EMAIL_PASSWORD"])
 
 # App setup
 app = Flask(__name__, static_folder="../static")
@@ -151,6 +154,7 @@ def email_thread():
             # Send the email
             email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
             email_client.send_light_email(USER["email"])
+
             print("Sent light email!")
 
         # Handle temperature
@@ -161,6 +165,7 @@ def email_thread():
             # Send the email
             email_cooldown["temperature"] = cur_time + EMAIL_TIMEOUT
             email_client.send_temp_email(USER["email"], temp, prefered_temp)
+
             print("Sent temperature email!")
 
         # Check for a response from the temperature
