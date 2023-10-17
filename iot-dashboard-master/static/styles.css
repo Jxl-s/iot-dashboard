@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono&display=swap');
+
+body {
+    background-color: #2c2c2c;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    font-family: "Poppins", sans-serif !important;
+}
+
+.hamburg-icon:hover {
+    filter: brightness(0.75);
+}
+
+.dash-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.section-title {
+    color: #888888;
+    font-size: 16px;
+}
+
+.custom-card {
+    background-color: #3e3e3e;
+    /* Add a drop shadow, 4px y down and 4px x down, blur of 4px, no spread */
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 1em 0.25em 1em 0.25em;
+    margin: 0.25em 0.1em 0.25em 0.1em;
+}
+
+.lg-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.lg-card-lgtitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.lg-card-smtitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.lg-card-desc {
+    color: #ffffff;
+    opacity: 50%;
+}
+
+.lg-card-highlight {
+    color: #8eaede;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.lg-button {
+    font-weight: bold;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5em 1em 0.5em 1em;
+    color: #ffffff;
+
+    width: 100%;
+}
+
+.lg-button-off {
+    background-color: #5a90e2;
+}
+
+.transition {
+    /* transition: 200ms; */
+}
+
+.lg-button-on {
+    background-color: #666666;
+}
+
+.lg-button:hover {
+    filter: brightness(1.1);
+}
+
+.on-off {
+    font-size: 16px;
+}
+
+.off {
+    color: #ff8888;
+}
+
+.on {
+    color: #88ff88;
+}
+
+.light-icon-on {
+    color: #ffffff;
+    /* add a glow effect, like make the icon appear better */
+    filter: drop-shadow(0 0 8px #ffff00);
+}
+
+.fan-icon-on {
+    color: #ffffff;
+    filter: drop-shadow(0 0 8px #0000ff);
+}
+
+.icon-off {
+    color: #333333;
+}
+
+.profile-picture {
+    margin-left: 16px;
+    border-radius: 8px;
+}
+
+.hide {
+    display: none !important;
+}
+
+.disabled {
+    opacity: 50%;
+}
+
+.fav-input {
+    /* remove all decoration */
+    border: none;
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+
+    border-bottom: 1px solid #666666;
+}
+
+.login-required {
+    display: none;
+}
+
+.spin {
+    border: 8px solid #333333; /* Light grey */
+    border-top: 8px solid #5a90e2; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spinner 2s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#time-label, #day-label {
+    font-family: "Roboto Mono", monospace;
+}
+
+#time-label {
+    font-size: 24px;
+}
+
+@keyframes ok-svg-colors {
+    0% {
+        fill: #69a5ff;
+    }
+    50% {
+        fill: #dae9ff;
+    }
+    100% {
+        fill: #69a5ff;
+    }
+}
+
+.ok-svg {
+    animation: ok-svg-colors 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+    display: none;
+}
