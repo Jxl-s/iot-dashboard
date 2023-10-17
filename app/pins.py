@@ -7,6 +7,9 @@ except:
 PINS = {
     "LED": 17,
 
+    # DHT
+    "DHT11": 4,
+
     # Motor
     "MOTOR_EN": 23,
     "MOTOR_IN1": 24,
@@ -18,6 +21,9 @@ def setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PINS["LED"], GPIO.OUT)
 
+    # TODO: Use a DHT11 library
+
+    # Motor
     GPIO.setup(PINS["MOTOR_EN"], GPIO.OUT)
     GPIO.setup(PINS["MOTOR_IN1"], GPIO.OUT)
     GPIO.setup(PINS["MOTOR_IN2"], GPIO.OUT)

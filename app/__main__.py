@@ -100,9 +100,9 @@ def set_favourites():
 def set_fan(status):
     STATES["fan"] = bool(status)
 
-    GPIO.output(PINS["MOTOR_EN"], GPIO.HIGH)
-    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW)
-    GPIO.output(PINS["MOTOR_IN2"], GPIO.HIGH)
+    GPIO.output(PINS["MOTOR_EN"], STATES["fan"])
+    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW) # This will be off for now
+    GPIO.output(PINS["MOTOR_IN2"], STATES["fan"])
 
     socketio.emit("fan_update", STATES["fan"])
 
