@@ -100,7 +100,9 @@ def set_favourites():
 def set_fan(status):
     STATES["fan"] = bool(status)
 
-    # TODO: Activate the fans
+    GPIO.output(PINS["MOTOR_EN"], GPIO.HIGH)
+    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW)
+    GPIO.output(PINS["MOTOR_IN2"], GPIO.HIGH)
 
     socketio.emit("fan_update", STATES["fan"])
 
