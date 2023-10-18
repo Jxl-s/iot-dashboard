@@ -6,6 +6,10 @@ function roundTwoDecimals(x) {
     return Math.round(x * 100) / 100;
 }
 
+function inverseLerp(val, min, max) {
+    if (min === max) return 0;
+    return (val - min) / (max - min);
+}
 
 $(document).ready(function () {
     const getTimeString = () => new Date().toLocaleTimeString([], {

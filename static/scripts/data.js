@@ -33,6 +33,13 @@ class StateFunctions {
         $("#sensor-light-val").text(numberWithCommas(State.sensors.light_intensity));
         $("#sensor-devices-val").text(numberWithCommas(State.sensors.devices));
 
+        // Update gradients
+        const tempPercentage = inverseLerp(State.sensors.temperature, 0, 50);
+        const humPercentage = inverseLerp(State.sensors.humidity, 20, 80);
+
+        $("#gradient_temp > stop").attr("offset", tempPercentage);
+        $("#gradient_hum > stop").attr("offset", humPercentage);
+
         // Update arrows
         Favourites.updateArrows();
     }
