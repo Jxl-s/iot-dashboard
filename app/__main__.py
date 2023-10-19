@@ -8,6 +8,8 @@ import json
 import os
 import time
 
+
+
 from flask import Flask, request, send_file
 from flask_socketio import SocketIO
 from threading import Thread
@@ -18,6 +20,7 @@ from pins import PINS, setup as pins_setup
 from dotenv import load_dotenv
 
 from utils.email import EmailClient
+from utils.freenove_dht import DHT
 
 # Load env, and setup the email client
 load_dotenv()
@@ -30,12 +33,18 @@ socketio = SocketIO(app, async_mode=None)
 # GPIO setup
 pins_setup()
 
-# TODO: these will most likely change because of different project requirements
-STATES = {"light": False, "fan": False}
+dht = DHT(PINS["DHT11"])
+dht.readDHT11()
+
+STATES = {
+    "light": GPIO.input(PINS["LED"]),
+    "fan": GPIO.input(PINS["MOTOR_EN"])
+}
+
 SENSOR_VALUES = {
-    "temperature": 22,
-    "humidity": 57.53,
-    "light_intensity": 400,
+    "temperature": dht.temperature,
+    "humidity": dht.humidity,
+    "light_intensity": 1000,
     "devices": 0,
 }
 
@@ -45,9 +54,9 @@ USER = {
     "description": "The main user of this computer",
     "avatar": "/static/images/default-user.jpg",
     "favourites": {
-        "temperature": 10,
-        "humidity": 40,
-        "light_intensity": 4000,
+        "temperature": 24,
+        "humidity": 50,
+        "light_intensity": 500,
     },
 }
 
@@ -117,15 +126,14 @@ def set_light(status):
 
 
 # TODO: remove this, and actually listen to sensor changes
-# this will also most likely be gone because of project requirements
 def send_dummy_data():
-    import random
-
     while True:
-        SENSOR_VALUES["temperature"] = random.randint(10, 30)
-        SENSOR_VALUES["humidity"] = random.randint(30, 80)
-        SENSOR_VALUES["light_intensity"] = random.randint(1000, 10000)
-        SENSOR_VALUES["devices"] = random.randint(0, 50)
+        dht.readDHT11()
+
+        SENSOR_VALUES["temperature"] = dht.temperature
+        SENSOR_VALUES["humidity"] = dht.humidity
+        SENSOR_VALUES["light_intensity"] = 1000
+        SENSOR_VALUES["devices"] = 0
 
         socketio.emit("sensor_update", SENSOR_VALUES)
         time.sleep(2)
