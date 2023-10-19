@@ -50,7 +50,7 @@ SENSOR_VALUES = {
 
 USER = {
     "name": "computer_user_123",
-    "email": "me@meeeee.com",
+    "email": "strong.victory.2002@gmail.com",
     "description": "The main user of this computer",
     "avatar": "/static/images/default-user.jpg",
     "favourites": {
@@ -142,7 +142,7 @@ def send_dummy_data():
 # This thread handles email-related actions
 def email_thread():
     # How much time before re-sending an email
-    EMAIL_TIMEOUT = 60 * 2  # 2 minutes
+    EMAIL_TIMEOUT = 60 * 10  # 10 minutes
 
     # Indicates whether the email has already been sent, to prevent spamming
     email_cooldown = {
@@ -157,7 +157,7 @@ def email_thread():
         light = SENSOR_VALUES["light_intensity"]
         prefered_light = USER["favourites"]["light_intensity"]
 
-        if light < prefered_light and email_cooldown["light_intensity"] <= cur_time:
+        if light < prefered_light and email_cooldown["light_intensity"] <= cur_time and not STATES["fan"]:
             # Change the light
             set_light(True)
 
