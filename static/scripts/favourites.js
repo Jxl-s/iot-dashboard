@@ -34,7 +34,7 @@ Favourites.cancel = () => {
 Favourites.updateArrows = async () => {
     // Temperature
     const tempDiff = Math.abs(State.favourites.temperature - State.sensors.temperature);
-    const isTempLower = State.favourites.temperature < State.sensors.temperature;
+    const isTempLower = State.favourites.temperature > State.sensors.temperature;
 
     $("#fav-temp-svg")
         .attr("transform", isTempLower ? "rotate(180)" : "rotate(0)")
@@ -50,7 +50,7 @@ Favourites.updateArrows = async () => {
 
     // Humidity
     const humDiff = Math.abs(State.favourites.humidity - State.sensors.humidity);
-    const isHumLower = State.favourites.humidity < State.sensors.humidity;
+    const isHumLower = State.favourites.humidity > State.sensors.humidity;
 
     $("#fav-hum-svg")
         .attr("transform", isHumLower ? "rotate(180)" : "rotate(0)")
@@ -66,7 +66,7 @@ Favourites.updateArrows = async () => {
 
     // Light
     const lightDiff = Math.abs(State.favourites.light_intensity - State.sensors.light_intensity);
-    const isLightLower = State.favourites.light_intensity < State.sensors.light_intensity;
+    const isLightLower = State.favourites.light_intensity > State.sensors.light_intensity;
 
     $("#fav-light-svg")
         .attr("transform", isLightLower ? "rotate(180)" : "rotate(0)")

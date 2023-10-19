@@ -34,7 +34,10 @@ socketio = SocketIO(app, async_mode=None)
 pins_setup()
 
 dht = DHT(PINS["DHT11"])
-dht.readDHT11()
+if dht.readDHT11() == dht.DHTLIB_OK:
+    print('Got DHT11 Value')
+else:
+    print('Failed to read DHT11 Value')
 
 STATES = {
     "light": GPIO.input(PINS["LED"]),
@@ -128,10 +131,10 @@ def set_light(status):
 # TODO: remove this, and actually listen to sensor changes
 def send_dummy_data():
     while True:
-        dht.readDHT11()
+        if dht.readDHT11() == dht.DHTLIB_OK:
+            SENSOR_VALUES["temperature"] = dht.temperature
+            SENSOR_VALUES["humidity"] = dht.humidity
 
-        SENSOR_VALUES["temperature"] = dht.temperature
-        SENSOR_VALUES["humidity"] = dht.humidity
         SENSOR_VALUES["light_intensity"] = 1000
         SENSOR_VALUES["devices"] = 0
 
