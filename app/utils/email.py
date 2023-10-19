@@ -26,11 +26,13 @@ class EmailClient:
             server.sendmail(self.my_email, receiver_email, msg.as_string())
 
     # Alerts the user that the light has been turned on
+    # TEMPORARY DISABLED: This is for phase 3
     def send_light_email(self, receiver_email: str):
-        time_str = time.strftime("%H:%M:%S")
-        body = f"Light is ON, Time: {time_str}"
+        pass
+        # time_str = time.strftime("%H:%M:%S")
+        # body = f"Light is ON, Time: {time_str}"
 
-        self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
+        # self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
 
     # Alerts the user that the temperature is high, and asks if they want
     # to turn on the fan
