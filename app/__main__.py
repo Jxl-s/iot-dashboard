@@ -8,8 +8,6 @@ import json
 import os
 import time
 
-
-
 from flask import Flask, request, send_file
 from flask_socketio import SocketIO
 from threading import Thread
@@ -35,14 +33,11 @@ pins_setup()
 
 dht = DHT(PINS["DHT11"])
 if dht.readDHT11() == dht.DHTLIB_OK:
-    print('Got DHT11 Value')
+    print("[Main] Got DHT11 Value")
 else:
-    print('Failed to read DHT11 Value')
+    print("[Main] Failed to read DHT11 Value")
 
-STATES = {
-    "light": GPIO.input(PINS["LED"]),
-    "fan": GPIO.input(PINS["MOTOR_EN"])
-}
+STATES = {"light": GPIO.input(PINS["LED"]), "fan": GPIO.input(PINS["MOTOR_EN"])}
 
 SENSOR_VALUES = {
     "temperature": dht.temperature,
@@ -113,7 +108,7 @@ def set_fan(status):
     STATES["fan"] = bool(status)
 
     GPIO.output(PINS["MOTOR_EN"], STATES["fan"])
-    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW) # This will be off for now
+    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW)  # This will be off for now
     GPIO.output(PINS["MOTOR_IN2"], STATES["fan"])
 
     socketio.emit("fan_update", STATES["fan"])
@@ -128,8 +123,8 @@ def set_light(status):
     socketio.emit("light_update", STATES["light"])
 
 
-# TODO: remove this, and actually listen to sensor changes
-def send_dummy_data():
+# This thread handles sensors
+def sensor_thread():
     while True:
         if dht.readDHT11() == dht.DHTLIB_OK:
             SENSOR_VALUES["temperature"] = dht.temperature
@@ -139,7 +134,7 @@ def send_dummy_data():
         SENSOR_VALUES["devices"] = 0
 
         socketio.emit("sensor_update", SENSOR_VALUES)
-        time.sleep(2)
+        time.sleep(1)
 
 
 # This thread handles email-related actions
@@ -150,41 +145,30 @@ def email_thread():
     # Indicates whether the email has already been sent, to prevent spamming
     email_cooldown = {
         "temperature": 0,
-        "light_intensity": 0,
     }
 
     while True:
         cur_time = time.time()
 
-        # Handle light intensity
-        light = SENSOR_VALUES["light_intensity"]
-        prefered_light = USER["favourites"]["light_intensity"]
-
-        if light < prefered_light and email_cooldown["light_intensity"] <= cur_time and not STATES["fan"]:
-            # Change the light
-            set_light(True)
-
-            # Send the email
-            email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
-            email_client.send_light_email(USER["email"])
-
-            print("Sent light email!")
-
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]
         prefered_temp = USER["favourites"]["temperature"]
 
-        if temp > prefered_temp and email_cooldown["temperature"] <= cur_time:
+        if (
+            temp > prefered_temp
+            and email_cooldown["temperature"] <= cur_time
+            and not STATES["fan"]
+        ):
             # Send the email
             email_cooldown["temperature"] = cur_time + EMAIL_TIMEOUT
             email_client.send_temp_email(USER["email"], temp, prefered_temp)
 
-            print("Sent temperature email!")
+            print("[Main] Sent temperature email")
 
         # Check for a response from the temperature
         response = email_client.check_temp_res(USER["email"])
         if response:
-            print("User responded with YES")
+            print("[Main] User responded with YES")
             set_fan(True)
 
         # Delay the loop
@@ -193,7 +177,7 @@ def email_thread():
 
 if __name__ == "__main__":
     # TODO: use the real sensor function
-    Thread(target=send_dummy_data).start()
+    Thread(target=sensor_thread).start()
     Thread(target=email_thread).start()
 
     app.run(host="0.0.0.0", port=3333)

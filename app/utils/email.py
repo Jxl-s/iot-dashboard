@@ -1,6 +1,5 @@
 import smtplib
 import imaplib
-import time
 
 from email.mime.text import MIMEText
 
@@ -25,23 +24,13 @@ class EmailClient:
             server.login(self.my_email, self.my_password)
             server.sendmail(self.my_email, receiver_email, msg.as_string())
 
-    # Alerts the user that the light has been turned on
-    # TEMPORARY DISABLED: This is for phase 3
-    def send_light_email(self, receiver_email: str):
-        pass
-        # time_str = time.strftime("%H:%M:%S")
-        # body = f"Light is ON, Time: {time_str}"
-
-        # self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
-
-    # Alerts the user that the temperature is high, and asks if they want
-    # to turn on the fan
+    # Alerts high temperature, and asks if user wants to turn on the fan
     def send_temp_email(self, receiver_email: str, temp: float, prefered_temp: float):
         body = (
             f"The current temperature is {temp}°C, "
             f"but prefered temperature is {prefered_temp}°C"
             "\n\n"
-            "Would you like to turn on the fan? Reply YES or NO"
+            "Would you like to turn on the fan? Reply with YES"
         )
 
         self.send_email(receiver_email, TEMP_EMAIL_SUBJECT, body)
