@@ -32,19 +32,24 @@ socketio = SocketIO(app, async_mode=None)
 pins_setup()
 
 dht = DHT(PINS["DHT11"])
-if dht.readDHT11() == dht.DHTLIB_OK:
-    print("[Main] Got DHT11 Value")
-else:
-    print("[Main] Failed to read DHT11 Value")
-
 STATES = {"light": GPIO.input(PINS["LED"]), "fan": GPIO.input(PINS["MOTOR_EN"])}
 
 SENSOR_VALUES = {
-    "temperature": dht.temperature,
-    "humidity": dht.humidity,
+    "temperature": 0,
+    "humidity": 0,
     "light_intensity": 1000,
     "devices": 0,
 }
+
+# Set the initial values of DHT11
+print("[Main] Reading DHT11...")
+if dht.readDHT11() == dht.DHTLIB_OK:
+    print("[Main] Got DHT11 Value")
+
+    SENSOR_VALUES["temperature"] = dht.temperature
+    SENSOR_VALUES["humidity"] = dht.humidity
+else:
+    print("[Main] Failed to read DHT11 Value")
 
 USER = {
     "name": "computer_user_123",
@@ -126,10 +131,12 @@ def set_light(status):
 # This thread handles sensors
 def sensor_thread():
     while True:
+        # Make sure the DHT11 is working
         if dht.readDHT11() == dht.DHTLIB_OK:
             SENSOR_VALUES["temperature"] = dht.temperature
             SENSOR_VALUES["humidity"] = dht.humidity
 
+        # TODO: Use the real values for light intensity and devices
         SENSOR_VALUES["light_intensity"] = 1000
         SENSOR_VALUES["devices"] = 0
 
@@ -171,8 +178,8 @@ def email_thread():
             print("[Main] User responded with YES")
             set_fan(True)
 
-        # Delay the loop
-        time.sleep(1)
+        # Don't abuse the email server
+        time.sleep(5)
 
 
 if __name__ == "__main__":
