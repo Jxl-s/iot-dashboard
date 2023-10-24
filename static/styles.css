@@ -106,9 +106,19 @@ body {
     filter: drop-shadow(0 0 8px #ffff00);
 }
 
+@keyframes spin-fan {
+    0% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
 .fan-icon-on {
     color: #ffffff;
     filter: drop-shadow(0 0 8px #0000ff);
+    animation: infinite spin-fan linear 2.5s;
 }
 
 .icon-off {
