@@ -57,7 +57,7 @@ USER = {
     "description": "The main user of this computer",
     "avatar": "/static/images/default-user.jpg",
     "favourites": {
-        "temperature": 24,
+        "temperature": 20,
         "humidity": 50,
         "light_intensity": 500,
     },
@@ -147,7 +147,7 @@ def sensor_thread():
 # This thread handles email-related actions
 def email_thread():
     # How much time before re-sending an email
-    EMAIL_TIMEOUT = 60 * 10  # 10 minutes
+    EMAIL_TIMEOUT = 60 * 2  # 2 minutes
 
     # Indicates whether the email has already been sent, to prevent spamming
     email_cooldown = {

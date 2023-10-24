@@ -1,5 +1,6 @@
 import smtplib
 import imaplib
+import email
 
 from email.mime.text import MIMEText
 
@@ -48,7 +49,9 @@ class EmailClient:
             # Go through, all the received emails. Check if one of them contains YES
             for num in data[0].split():
                 _, data = server.fetch(num, "(RFC822)")
-                msg = data[0][1].decode("utf-8")
+                msg = data[0][1]
+
+                body = str(EmailClient.get_email_body(msg))
 
                 # Delete the email
                 server.store(num, "+FLAGS", "\\Deleted")
@@ -56,7 +59,16 @@ class EmailClient:
                 server.logout()
 
                 # Check if the message contains YES
-                if "YES" in msg.upper():
+                print(body)
+                if (body.startswith('YES')):
                     return True
 
         return False
+
+    def get_email_body(mail):
+        body = ""
+        msg = email.message_from_bytes(mail, policy=email.policy.default)
+        body = msg.get_body(('plain',))
+        if body:
+            body = body.get_content()
+        return body
