@@ -59,7 +59,6 @@ class EmailClient:
                 server.logout()
 
                 # Check if the message contains YES
-                print(body)
                 if (body.startswith('YES')):
                     return True
 
