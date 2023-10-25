@@ -9,9 +9,9 @@ try:
     import RPi.GPIO as GPIO
 except ImportError:
     import Mock.GPIO as GPIO
+    no_gpio_mode = True
 
 import time
-
 
 class DHT(object):
     DHTLIB_OK = 0
@@ -91,6 +91,12 @@ class DHT(object):
 
     # Read DHT sensor, analyze the data of temperature and humidity
     def readDHT11Once(self):
+        if no_gpio_mode:
+            self.humidity = 50
+            self.temperature = 24
+
+            return self.DHTLIB_OK
+
         rv = self.readSensor(self.pin, self.DHTLIB_DHT11_WAKEUP)
         if rv is not self.DHTLIB_OK:
             self.humidity = self.DHTLIB_INVALID_VALUE

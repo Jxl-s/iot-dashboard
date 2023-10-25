@@ -55,19 +55,23 @@ class EmailClient:
 
                 # Delete the email
                 server.store(num, "+FLAGS", "\\Deleted")
-                server.expunge()
-                server.logout()
 
                 # Check if the message contains YES
-                if (body.startswith('YES')):
+                if body.startswith("YES"):
+                    server.expunge()
+                    server.logout()
+
                     return True
+
+            server.expunge()
+            server.logout()
 
         return False
 
     def get_email_body(mail):
         body = ""
         msg = email.message_from_bytes(mail, policy=email.policy.default)
-        body = msg.get_body(('plain',))
+        body = msg.get_body(("plain",))
         if body:
             body = body.get_content()
         return body
