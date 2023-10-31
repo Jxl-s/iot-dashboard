@@ -18,6 +18,7 @@ from pins import PINS, setup as pins_setup
 from dotenv import load_dotenv
 
 from utils.email import EmailClient
+from utils.database import get_user_by_id
 from utils.freenove_dht import DHT
 
 # Load env, and setup the email client
@@ -51,17 +52,14 @@ if dht.readDHT11() == dht.DHTLIB_OK:
 else:
     print("[Main] Failed to read DHT11 Value")
 
-USER = {
-    "name": "computer_user_123",
-    "email": "strong.victory.2002@gmail.com",
-    "description": "The main user of this computer",
-    "avatar": "/static/images/default-user.jpg",
-    "favourites": {
-        "temperature": 20,
-        "humidity": 50,
-        "light_intensity": 500,
-    },
-}
+# email to which to send emails
+NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
+
+# Load the user account (0 will indicate no logged in user)
+# TODO: Make this with the RFID reader
+
+user_id = 1
+user_info = get_user_by_id(user_id)
 
 
 # Dashboard page
@@ -74,7 +72,9 @@ def index():
 @app.route("/get-data")
 def get_data():
     # If they are not logged in, use False as user.
-    response = json.dumps({"states": STATES, "sensors": SENSOR_VALUES, "user": USER})
+    response = json.dumps(
+        {"states": STATES, "sensors": SENSOR_VALUES, "user": user_info}
+    )
     return response, 200, {"Content-Type": "application/json"}
 
 
@@ -99,9 +99,9 @@ def set_favourites():
         return "Invalid light", 400
 
     # Save the favourites to the array
-    USER["favourites"]["temperature"] = data["temperature"]
-    USER["favourites"]["humidity"] = data["humidity"]
-    USER["favourites"]["light_intensity"] = data["light"]
+    user_info["favourites"]["temperature"] = data["temperature"]
+    user_info["favourites"]["humidity"] = data["humidity"]
+    user_info["favourites"]["light_intensity"] = data["light"]
 
     # TODO: Save the favourites to the user's profile in the future
     return "OK", 200
@@ -159,7 +159,7 @@ def email_thread():
 
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]
-        prefered_temp = USER["favourites"]["temperature"]
+        prefered_temp = user_info["favourites"]["temperature"]
 
         if (
             temp > prefered_temp
@@ -168,12 +168,12 @@ def email_thread():
         ):
             # Send the email
             email_cooldown["temperature"] = cur_time + EMAIL_TIMEOUT
-            email_client.send_temp_email(USER["email"], temp, prefered_temp)
+            email_client.send_temp_email(NOTIFICATION_EMAIL, temp, prefered_temp)
 
             print("[Main] Sent temperature email")
 
         # Check for a response from the temperature
-        response = email_client.check_temp_res(USER["email"])
+        response = email_client.check_temp_res(NOTIFICATION_EMAIL)
         if response:
             print("[Main] User responded with YES")
             set_fan(True)
