@@ -9,7 +9,7 @@ import os
 import time
 
 from flask import Flask, request, send_file
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from threading import Thread
 
 # My packages
@@ -38,7 +38,7 @@ STATES = {"light": GPIO.input(PINS["LED"]), "fan": GPIO.input(PINS["MOTOR_EN"])}
 SENSOR_VALUES = {
     "temperature": 0,
     "humidity": 0,
-    "light_intensity": 1000,
+    "light_intensity": 0,
     "devices": 0,
 }
 
@@ -52,7 +52,7 @@ if dht.readDHT11() == dht.DHTLIB_OK:
 else:
     print("[Main] Failed to read DHT11 Value")
 
-# email to which to send emails
+# Email to which to send emails
 NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 
 # Load the user account (0 will indicate no logged in user)
@@ -60,6 +60,16 @@ NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 
 user_id = 1
 user_info = get_user_by_id(user_id)
+
+
+def update_user(new_user_id):
+    global user_id, user_info
+
+    user_id = new_user_id
+    user_info = get_user_by_id(user_id)
+
+    socketio.emit("user_update", user_info)
+    print("[Main] Updated user to", user_id, user_info)
 
 
 # Dashboard page
@@ -76,6 +86,13 @@ def get_data():
         {"states": STATES, "sensors": SENSOR_VALUES, "user": user_info}
     )
     return response, 200, {"Content-Type": "application/json"}
+
+
+# Handle logout
+@app.route("/signout", methods=["POST"])
+def signout():
+    update_user(0)
+    return "OK", 200
 
 
 # Changes the user's preference.
@@ -99,9 +116,10 @@ def set_favourites():
         return "Invalid light", 400
 
     # Save the favourites to the array
-    user_info["favourites"]["temperature"] = data["temperature"]
-    user_info["favourites"]["humidity"] = data["humidity"]
-    user_info["favourites"]["light_intensity"] = data["light"]
+    if user_info:
+        user_info["favourites"]["temperature"] = data["temperature"]
+        user_info["favourites"]["humidity"] = data["humidity"]
+        user_info["favourites"]["light_intensity"] = data["light"]
 
     # TODO: Save the favourites to the user's profile in the future
     return "OK", 200
@@ -137,7 +155,7 @@ def sensor_thread():
             SENSOR_VALUES["humidity"] = dht.humidity
 
         # TODO: Use the real values for light intensity and devices
-        SENSOR_VALUES["light_intensity"] = 1000
+        SENSOR_VALUES["light_intensity"] = 400
         SENSOR_VALUES["devices"] = 0
 
         socketio.emit("sensor_update", SENSOR_VALUES)
@@ -152,10 +170,34 @@ def email_thread():
     # Indicates whether the email has already been sent, to prevent spamming
     email_cooldown = {
         "temperature": 0,
+        "light_intensity": 0,
     }
 
     while True:
         cur_time = time.time()
+
+        # No login, so don't go through
+        if not user_info:
+            time.sleep(1)
+            continue
+
+        # Handle light intensity
+        light = SENSOR_VALUES["light_intensity"]
+        prefered_light = user_info["favourites"]["light_intensity"]
+
+        if (
+            light < prefered_light
+            and email_cooldown["light_intensity"] <= cur_time
+            and not STATES["light"]
+        ):
+            # Change the light
+            set_light(True)
+
+            # Send the email
+            email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
+            email_client.send_light_email(NOTIFICATION_EMAIL)
+
+            print("Sent light email!")
 
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]

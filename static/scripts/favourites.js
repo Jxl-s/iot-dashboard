@@ -135,4 +135,8 @@ $(document).ready(async function () {
         // Submit the form
         Favourites.submit();
     });
+
+    $("#signout-btn").click(async () => {
+        await fetch("/signout", { method: "POST" });
+    })
 });
