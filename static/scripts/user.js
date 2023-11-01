@@ -130,6 +130,17 @@ Favourites.submit = async () => {
     return sendNotif("success", "Updated favourites!", "Your favourites have been updated.");
 };
 
+// Some user functions
+const User = {};
+User.signout = async () => {
+    await fetch("/signout", { method: "POST" });
+}
+
+// TODO: Remove this when RFID is added
+User.loginAs = async (id) => {
+    await fetch(`/login/${id}`, { method: "POST" });
+}
+
 $(document).ready(async function () {
     $("#edit-favs-btn").click(() => {
         $("#edit-favs-btn").text() === "Edit" ? Favourites.edit() : Favourites.cancel();
@@ -140,7 +151,5 @@ $(document).ready(async function () {
         Favourites.submit();
     });
 
-    $("#signout-btn").click(async () => {
-        await fetch("/signout", { method: "POST" });
-    })
+    $("#signout-btn").click(User.signout);
 });

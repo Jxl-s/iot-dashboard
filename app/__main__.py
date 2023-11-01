@@ -101,6 +101,11 @@ def signout():
     update_user(0)
     return "OK", 200
 
+# TODO: Remove when RFID is implemented
+@app.route("/login/<int:user_id>", methods=["POST"])
+def login(user_id):
+    update_user(user_id)
+    return "OK", 200
 
 # Changes the user's preference.
 @app.route("/set-favourites", methods=["POST"])

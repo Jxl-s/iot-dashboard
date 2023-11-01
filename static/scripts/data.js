@@ -81,7 +81,6 @@ class StateFunctions {
             $("#user-loaded").removeClass("d-flex").addClass("d-none");
             $("#user-loading").removeClass("d-none").addClass("d-flex");
 
-            const waitTimeout = State._initialized ? 1000 : 500;
             setTimeout(() => {
                 // Hide the loading animation
                 $("#user-loading").removeClass("d-flex").addClass("d-none");
@@ -92,9 +91,12 @@ class StateFunctions {
                 $("#user-pfp").attr("src", State.user.avatar);
                 $("#user-name").text(State.user.name);
                 $("#user-desc").text(State.user.description);
-            }, waitTimeout);
+            }, 250);
 
             if (State._initialized) {
+                // Change the favourites
+                StateFunctions.updateFavourites(State.user.favourites);
+
                 return sendNotif("success", "Logged in", `Welcome, ${State.user.name}!`)
             }
         } else {
