@@ -95,8 +95,8 @@ def get_data():
 
 
 # Handle logout
-@app.route("/signout", methods=["POST"])
-def signout():
+@app.route("/logout", methods=["POST"])
+def logout():
     # User with ID 0 does not exist, so the profile will be None
     update_user(0)
     return "OK", 200

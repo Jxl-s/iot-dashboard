@@ -5,6 +5,7 @@ from tkinter import filedialog
 import shutil
 import random
 import string
+import requests
 
 
 def generate_random_string(length):
@@ -17,6 +18,8 @@ DATABASE_NAME = "intellihouse.db"
 
 # USAGE:
 # python actions.py --create "my username" "my description"
+# python actions.py --login 2
+# python actions.py --logout
 def main():
     # Get the args, create a user
     action = sys.argv[1]
@@ -58,6 +61,13 @@ def main():
             )
 
             print("User created, with ID", cur.lastrowid)
+
+        if action == "--login":
+            userid = sys.argv[2]
+            requests.post(f"http://localhost:3333/login/{userid}")
+
+        if action == "--logout":
+            requests.post("http://localhost:3333/logout")
 
 
 if __name__ == "__main__":

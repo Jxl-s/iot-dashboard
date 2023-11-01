@@ -132,8 +132,8 @@ Favourites.submit = async () => {
 
 // Some user functions
 const User = {};
-User.signout = async () => {
-    await fetch("/signout", { method: "POST" });
+User.logout = async () => {
+    await fetch("/logout", { method: "POST" });
 }
 
 // TODO: Remove this when RFID is added
@@ -151,5 +151,5 @@ $(document).ready(async function () {
         Favourites.submit();
     });
 
-    $("#signout-btn").click(User.signout);
+    $("#logout-btn").click(User.logout);
 });
