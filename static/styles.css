@@ -208,3 +208,12 @@ body {
     height: 3px;
     background-color: #555555;
 }
+
+.sensor-bar-ball {
+    width: 10px;
+    height: 10px;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    border-radius: 8px;
+}
