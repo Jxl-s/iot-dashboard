@@ -101,14 +101,20 @@ Favourites.submit = async () => {
     $("#submit-fav-btn").attr("disabled", true).addClass("disabled");
 
     // Send a request
-    const res = await fetch("/set-favourites", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data),
-    })
+    let res
+    try {
+        res = await fetch("/set-favourites", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data),
+        })
+    } catch (e) {
+        $("#submit-fav-btn").attr("disabled", false).removeClass("disabled");
+        return sendNotif("error", "Failed to update favourites", "Server Error.");
+    }
 
     // Hide the submit button
     $("#submit-fav-btn").attr("disabled", false).removeClass("disabled");
