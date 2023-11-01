@@ -87,11 +87,18 @@ class StateFunctions {
                 $("#user-desc").text(State.user.description);
             }, waitTimeout);
 
+            if (State._initialized) {
+                return sendNotif("success", "Logged in", `Welcome, ${State.user.name}!`)
+            }
         } else {
             $(".login-required").css('display', "none");
 
             $("#user-name").text("Please scan your ID card");
             $("#user-desc").text("You are not logged in. Please log in to access a large range of features, such as managing your favourite configuration.");
+
+            if (State._initialized) {
+                return sendNotif("error", "Logged out", "You have been logged out.");
+            }
         }
     }
 

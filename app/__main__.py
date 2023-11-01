@@ -61,6 +61,7 @@ NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 user_id = 1
 user_info = get_user_by_id(user_id)
 
+
 # Updates the logged in user
 def update_user(new_user_id):
     global user_id, user_info
@@ -70,6 +71,7 @@ def update_user(new_user_id):
 
     socketio.emit("user_update", user_info)
     print("[Main] Updated user to", user_id, user_info)
+
 
 # Utility function for clamping
 def clamp(n, minn, maxn):
@@ -107,7 +109,7 @@ def set_favourites():
     data = request.get_json()
 
     # Make sure fields are present
-    if not data["temperature"] or not data["humidity"] or not data["light"]:
+    if data["temperature"] is None or data["humidity"] is None or data["light"] is None:
         return "Missing data", 400
 
     # Make sure fields are valid
