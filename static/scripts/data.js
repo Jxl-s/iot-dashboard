@@ -35,10 +35,17 @@ class StateFunctions {
 
         // Update gradients
         const tempPercentage = inverseLerp(State.sensors.temperature, 0, 50);
-        const humPercentage = inverseLerp(State.sensors.humidity, 20, 80);
+        const humPercentage = inverseLerp(State.sensors.humidity, 0, 100);
+        const lightPercentage = inverseLerp(State.sensors.light_intensity, 0, 1000);
 
         $("#gradient_temp > stop").attr("offset", tempPercentage);
+        $("#bar_temp").css("width", tempPercentage * 100 + "%");
+
         $("#gradient_hum > stop").attr("offset", humPercentage);
+        $("#bar_hum").css("width", humPercentage * 100 + "%");
+
+        $("#gradient_light > stop").attr("offset", lightPercentage);
+        $("#bar_light").css("width", lightPercentage * 100 + "%");
 
         // Update arrows
         Favourites.updateArrows();
