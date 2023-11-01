@@ -11,6 +11,10 @@ function inverseLerp(val, min, max) {
     return (val - min) / (max - min);
 }
 
+function hideNotif() {
+    $("#notif-container").addClass("hide");
+}
+
 function sendNotif(type, title, body) {
     $("#notif-title").text(title);
     $("#notif-body").text(body);

@@ -16,8 +16,11 @@
         <!-- Notification bubble -->
         <div id="notif-container" class="hide">
             <div id="notif-frame" class="w-100 h-100 p-3" style="border-radius: 8px;">
-                <b id="notif-title">Success!</b>
-                <br />
+                <div class="d-flex justify-content-between mb-1">
+                    <b id="notif-title">Success!</b>
+                    <!-- cursor pointer on hover -->
+                    <span style="cursor: pointer; font-weight: bold" onclick="hideNotif()">x</span>
+                </div>
                 <span id="notif-body">The favourites have been successfully updated!</span>
             </div>
         </div>
@@ -160,7 +163,6 @@
                             <span class="text-secondary">N/A</span>
                             <div class="w-100 rounded sensor-bar-back mx-2">
                             </div>
-                            <span class="text-secondary">N/A</span>
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">
