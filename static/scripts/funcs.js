@@ -11,6 +11,26 @@ function inverseLerp(val, min, max) {
     return (val - min) / (max - min);
 }
 
+function sendNotif(type, title, body) {
+    $("#notif-title").text(title);
+    $("#notif-body").text(body);
+    $("#notif-container").removeClass("hide");
+
+    // Set the color
+    if (type === "error") {
+        $("#notif-frame").css("background-color", "rgb(171, 100, 100)");
+    } else if (type === "success") {
+        $("#notif-frame").css("background-color", "rgb(100, 171, 100)");
+    } else {
+        $("#notif-frame").css("background-color", "");
+    }
+
+    // Hide after 2 seconds
+    setTimeout(() => {
+        $("#notif-container").addClass("hide");
+    }, 2000);
+}
+
 $(document).ready(function () {
     const getTimeString = () => new Date().toLocaleTimeString([], {
         hour: 'numeric',

@@ -20,11 +20,20 @@ with sqlite3.connect(DATABASE_NAME) as con:
 
     # Create the default user if it does not exist
     cur.execute(
-        """INSERT OR IGNORE INTO users (id, name, description, avatar, temp_threshold, humidity_threshold, light_threshold)
-            VALUES (1, 'Default User', 'Default user for testing purposes', '/static/images/default-user.jpg', 24, 50, 400)"""
+        """INSERT OR IGNORE INTO users (
+            id,
+            name,
+            description,
+            avatar,
+            temp_threshold,
+            humidity_threshold,
+            light_threshold
+        )
+        VALUES (1, 'Default User', 'Default user for testing purposes', '/static/images/default-user.jpg', 24, 50, 400)"""
     )
 
 
+# Gets the user profile, given the user id
 def get_user_by_id(user_id):
     with sqlite3.connect(DATABASE_NAME) as con:
         # Execute a query
@@ -47,3 +56,19 @@ def get_user_by_id(user_id):
                 "light_intensity": result[6],
             },
         }
+
+
+# Updates a user's favourite tresholds
+def update_user_favourites(user_id, favourites):
+    with sqlite3.connect(DATABASE_NAME) as con:
+        # Execute a query
+        cur = con.cursor()
+        cur.execute(
+            """UPDATE users SET temp_threshold = ?, humidity_threshold = ?, light_threshold = ? WHERE id = ?""",
+            (
+                favourites["temperature"],
+                favourites["humidity"],
+                favourites["light_intensity"],
+                user_id,
+            ),
+        )

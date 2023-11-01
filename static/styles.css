@@ -194,3 +194,12 @@ body {
     animation: ok-svg-colors 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
     display: none;
 }
+
+/* Notification */
+#notif-container {
+    position: fixed;
+    width: 400px;
+    top: 0;
+    right: 0;
+    margin: 1em 3em 0 0;
+}

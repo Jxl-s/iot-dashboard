@@ -13,6 +13,15 @@
 
 <body class="d-flex">
     <div class="p-5 w-100">
+        <!-- Notification bubble -->
+        <div id="notif-container" class="hide">
+            <div id="notif-frame" class="w-100 h-100 p-3" style="border-radius: 8px;">
+                <b id="notif-title">Success!</b>
+                <br />
+                <span id="notif-body">The favourites have been successfully updated!</span>
+            </div>
+        </div>
+
         <!-- Title -->
         <div class="d-flex align-items-center justify-content-between mb-1">
             <div class="d-flex justify-content-center">
@@ -165,12 +174,8 @@
                         <div class="lg-card-lgtitle">Favourites</div>
 
                         <!-- TODO: Activate this on next deliverable -->
-                        <!-- <button id="edit-favs-btn" class="transition lg-button lg-button-off text-center"
-                            style="width: 200px; padding-top: 4px; padding-bottom: 4px;">Edit</button> -->
-
                         <button id="edit-favs-btn" class="transition lg-button lg-button-off text-center"
-                            style="width: 200px; padding-top: 4px; padding-bottom: 4px; opacity: 50%"
-                            disabled>Edit</button>
+                            style="width: 200px; padding-top: 4px; padding-bottom: 4px;">Edit</button>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-4">

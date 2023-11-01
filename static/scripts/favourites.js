@@ -87,7 +87,9 @@ Favourites.submit = async () => {
     const favLightInput = $("#fav-light-input").val();
 
     // If one of the fields are empty, don't allow it to go further
-    if (favTempInput === "" || favHumInput === "" || favLightInput === "") return;
+    if (favTempInput === "" || favHumInput === "" || favLightInput === "") {
+        return sendNotif("error", "Failed to update favourites", "Please fill in all the fields.");
+    }
 
     const data = {
         temperature: parseFloat(favTempInput),
@@ -108,22 +110,24 @@ Favourites.submit = async () => {
         body: JSON.stringify(data),
     })
 
-    if (res.status !== 200) return;
+    // Hide the submit button
+    $("#submit-fav-btn").attr("disabled", false).removeClass("disabled");
+    if (res.status !== 200) {
+        return sendNotif("error", "Failed to update favourites", "Check your inputs and try again.");
+    }
 
     // Now update the displayed fields
-    StateFunctions.updateFavourites({
-        temperature: data.temperature,
-        humidity: data.humidity,
-        light_intensity: data.light,
-    })
+    const newFavourites = await res.json();
+    StateFunctions.updateFavourites(newFavourites);
 
     // Make the inputs disappear
     $("#edit-favs-btn").text("Edit").css("background-color", "");;
     $(".fav-input").addClass("hide");
     $(".fav-val").removeClass("hide");
 
-    // Hide the submit button
-    $("#submit-fav-btn").addClass("hide").removeClass("disabled").attr("disabled", false);
+    $("#submit-fav-btn").addClass("hide");
+
+    return sendNotif("success", "Updated favourites!", "Your favourites have been updated.");
 };
 
 $(document).ready(async function () {

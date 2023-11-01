@@ -9,7 +9,7 @@ import os
 import time
 
 from flask import Flask, request, send_file
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from threading import Thread
 
 # My packages
@@ -18,7 +18,7 @@ from pins import PINS, setup as pins_setup
 from dotenv import load_dotenv
 
 from utils.email import EmailClient
-from utils.database import get_user_by_id
+from utils.database import get_user_by_id, update_user_favourites
 from utils.freenove_dht import DHT
 
 # Load env, and setup the email client
@@ -61,7 +61,7 @@ NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 user_id = 1
 user_info = get_user_by_id(user_id)
 
-
+# Updates the logged in user
 def update_user(new_user_id):
     global user_id, user_info
 
@@ -70,6 +70,10 @@ def update_user(new_user_id):
 
     socketio.emit("user_update", user_info)
     print("[Main] Updated user to", user_id, user_info)
+
+# Utility function for clamping
+def clamp(n, minn, maxn):
+    return max(min(maxn, n), minn)
 
 
 # Dashboard page
@@ -91,6 +95,7 @@ def get_data():
 # Handle logout
 @app.route("/signout", methods=["POST"])
 def signout():
+    # User with ID 0 does not exist, so the profile will be None
     update_user(0)
     return "OK", 200
 
@@ -115,14 +120,16 @@ def set_favourites():
     if not isinstance(data["light"], (int, float)):
         return "Invalid light", 400
 
-    # Save the favourites to the array
+    # Save the favourites
     if user_info:
-        user_info["favourites"]["temperature"] = data["temperature"]
-        user_info["favourites"]["humidity"] = data["humidity"]
-        user_info["favourites"]["light_intensity"] = data["light"]
+        user_info["favourites"]["temperature"] = clamp(data["temperature"], -20, 50)
+        user_info["favourites"]["humidity"] = clamp(data["humidity"], 0, 100)
+        user_info["favourites"]["light_intensity"] = clamp(data["light"], 0, 100000)
 
-    # TODO: Save the favourites to the user's profile in the future
-    return "OK", 200
+        # Update the user
+        update_user_favourites(user_id, user_info["favourites"])
+
+    return user_info["favourites"], 200, {"Content-Type": "application/json"}
 
 
 # Fan
