@@ -234,7 +234,6 @@ def email_thread():
 
 
 if __name__ == "__main__":
-    # TODO: use the real sensor function
     Thread(target=sensor_thread).start()
     Thread(target=email_thread).start()
 

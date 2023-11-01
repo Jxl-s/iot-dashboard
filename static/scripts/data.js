@@ -108,6 +108,13 @@ class StateFunctions {
 
         // Update displays
         LED.setState(State.light);
+
+        // Update the "email sent" label
+        if (State.light) {
+            $("#light-sent-label").text("Email has been sent!");
+        } else {
+            $("#light-sent-label").text("");
+        }
     }
 
     static updateFan(status) {

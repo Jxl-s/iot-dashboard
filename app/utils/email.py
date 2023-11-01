@@ -28,7 +28,7 @@ class EmailClient:
 
     def send_light_email(self, receiver_email: str):
         time_str = time.strftime("%H:%M:%S")
-        body = f"Light is ON, Time: {time_str}"
+        body = f"The light is ON, Time: {time_str}"
 
         self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
 
