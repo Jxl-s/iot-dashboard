@@ -20,14 +20,15 @@ DATABASE_NAME = "intellihouse.db"
 def main():
     # Get the args, create a user
     action = sys.argv[1]
-    name = sys.argv[2]
-    description = sys.argv[3]
 
     # Create a user
     with sqlite3.connect(DATABASE_NAME) as con:
         cur = con.cursor()
 
         if action == "--create":
+            name = sys.argv[2]
+            description = sys.argv[3] if len(sys.argv) > 3 else "No Description"
+
             avatar_path = filedialog.askopenfilename(
                 filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp")]
             )
