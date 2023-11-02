@@ -199,10 +199,11 @@ def email_thread():
             continue
 
         # Handle light intensity
-        if SENSOR_VALUES["light_intensity"] is not None:
-            light = SENSOR_VALUES["light_intensity"]
-            prefered_light = user_info["favourites"]["light_intensity"]
+        # if SENSOR_VALUES["light_intensity"] is not None:
+        light = SENSOR_VALUES["light_intensity"]
+        prefered_light = user_info["favourites"]["light_intensity"]
 
+        if not (light is None):
             if (
                 light < prefered_light
                 and email_cooldown["light_intensity"] <= cur_time
@@ -251,7 +252,7 @@ def mqtt_thread():
         SENSOR_VALUES["light_intensity"] = value
 
     client = MQTTClient(host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0)])
-    client.set_callback(LIGHT_TOPIC, on_light)
+    client.set_callback(LIGHT_TOPIC, on_light, float)
     client.connect()
 
 

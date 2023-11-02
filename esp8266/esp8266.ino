@@ -1,9 +1,9 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-const char* ssid = "Imran\342\200\231s Iphone";
-const char* password = "12345678";
-const char* mqtt_server = "172.20.10.2";
+const char* ssid = "Oooooooooo";
+const char* password = "BalanceGame";
+const char* mqtt_server = "172.20.10.7";
 const int pResistor = A0;
 int value; 
 WiFiClient vanieriot;

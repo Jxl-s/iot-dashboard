@@ -5,6 +5,7 @@
 # Author      : freenove
 # modification: 2020/10/16
 ########################################################################
+no_gpio_mode = False
 try:
     import RPi.GPIO as GPIO
 except ImportError:
