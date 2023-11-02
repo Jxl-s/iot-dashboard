@@ -18,6 +18,7 @@ from pins import PINS, setup as pins_setup
 from dotenv import load_dotenv
 
 from utils.email import EmailClient
+from utils.mqtt import MQTTClient
 from utils.database import get_user_by_id, update_user_favourites
 from utils.freenove_dht import DHT
 
@@ -38,7 +39,7 @@ STATES = {"light": GPIO.input(PINS["LED"]), "fan": GPIO.input(PINS["MOTOR_EN"])}
 SENSOR_VALUES = {
     "temperature": 0,
     "humidity": 0,
-    "light_intensity": 0,
+    "light_intensity": None,
     "devices": 0,
 }
 
@@ -101,11 +102,13 @@ def logout():
     update_user(0)
     return "OK", 200
 
+
 # TODO: Remove when RFID is implemented
 @app.route("/login/<int:user_id>", methods=["POST"])
 def login(user_id):
     update_user(user_id)
     return "OK", 200
+
 
 # Changes the user's preference.
 @app.route("/set-favourites", methods=["POST"])
@@ -169,7 +172,7 @@ def sensor_thread():
             SENSOR_VALUES["humidity"] = dht.humidity
 
         # TODO: Use the real values for light intensity and devices
-        SENSOR_VALUES["light_intensity"] = 400
+        # Light intensity handled by MQTT
         SENSOR_VALUES["devices"] = 0
 
         socketio.emit("sensor_update", SENSOR_VALUES)
@@ -196,22 +199,23 @@ def email_thread():
             continue
 
         # Handle light intensity
-        light = SENSOR_VALUES["light_intensity"]
-        prefered_light = user_info["favourites"]["light_intensity"]
+        if SENSOR_VALUES["light_intensity"] is not None:
+            light = SENSOR_VALUES["light_intensity"]
+            prefered_light = user_info["favourites"]["light_intensity"]
 
-        if (
-            light < prefered_light
-            and email_cooldown["light_intensity"] <= cur_time
-            and not STATES["light"]
-        ):
-            # Change the light
-            set_light(True)
+            if (
+                light < prefered_light
+                and email_cooldown["light_intensity"] <= cur_time
+                and not STATES["light"]
+            ):
+                # Change the light
+                set_light(True)
 
-            # Send the email
-            email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
-            email_client.send_light_email(NOTIFICATION_EMAIL)
+                # Send the email
+                email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
+                email_client.send_light_email(NOTIFICATION_EMAIL)
 
-            print("Sent light email!")
+                print("Sent light email!")
 
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]
@@ -238,8 +242,22 @@ def email_thread():
         time.sleep(5)
 
 
+# This thread handles the MQTT connection
+def mqtt_thread():
+    LIGHT_TOPIC = "room/light_intensity"
+
+    def on_light(value):
+        # Update light intensity
+        SENSOR_VALUES["light_intensity"] = value
+
+    client = MQTTClient(host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0)])
+    client.set_callback(LIGHT_TOPIC, on_light)
+    client.connect()
+
+
 if __name__ == "__main__":
     Thread(target=sensor_thread).start()
     Thread(target=email_thread).start()
+    Thread(target=mqtt_thread).start()
 
     app.run(host="0.0.0.0", port=3333)

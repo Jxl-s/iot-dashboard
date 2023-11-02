@@ -24,7 +24,7 @@ class StateFunctions {
         // Update state
         State.sensors.temperature = data.temperature;
         State.sensors.humidity = data.humidity;
-        State.sensors.light_intensity = data.light_intensity;
+        State.sensors.light_intensity = data.light_intensity ?? 0;
         State.sensors.devices = data.devices;
 
         // Update displays
