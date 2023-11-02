@@ -34,9 +34,9 @@ class StateFunctions {
         $("#sensor-devices-val").text(numberWithCommas(State.sensors.devices));
 
         // Update gradients
-        const tempPercentage = inverseLerp(State.sensors.temperature, 0, 50);
-        const humPercentage = inverseLerp(State.sensors.humidity, 0, 100);
-        const lightPercentage = inverseLerp(State.sensors.light_intensity, 0, 1000);
+        const tempPercentage = Math.min(inverseLerp(State.sensors.temperature, 0, 50), 1);
+        const humPercentage = Math.min(inverseLerp(State.sensors.humidity, 0, 100), 1);
+        const lightPercentage = Math.min(inverseLerp(State.sensors.light_intensity, 0, 1000), 1);
 
         $("#gradient_temp > stop").attr("offset", tempPercentage);
         $("#bar_temp").css("width", tempPercentage * 100 + "%");
