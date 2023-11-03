@@ -64,7 +64,7 @@ class EmailClient:
                 server.store(num, "+FLAGS", "\\Deleted")
 
                 # Check if the message contains YES
-                if body.lower().startswith("YES"):
+                if body.lower().startswith("yes"):
                     server.expunge()
                     server.logout()
 
