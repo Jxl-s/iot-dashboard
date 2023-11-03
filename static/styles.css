@@ -210,8 +210,8 @@ body {
 }
 
 .sensor-bar-ball {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     right: 0;
     top: 50%;
     transform: translate(50%, -50%);

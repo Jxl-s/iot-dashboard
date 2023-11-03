@@ -134,7 +134,7 @@ def set_favourites():
     if user_info:
         user_info["favourites"]["temperature"] = clamp(data["temperature"], -20, 50)
         user_info["favourites"]["humidity"] = clamp(data["humidity"], 0, 100)
-        user_info["favourites"]["light_intensity"] = clamp(data["light"], 0, 100000)
+        user_info["favourites"]["light_intensity"] = clamp(data["light"], 0, 1024)
 
         # Update the user
         update_user_favourites(user_id, user_info["favourites"])
@@ -203,7 +203,7 @@ def email_thread():
         light = SENSOR_VALUES["light_intensity"]
         prefered_light = user_info["favourites"]["light_intensity"]
 
-        if not (light is None):
+        if light is not None:
             if (
                 light < prefered_light
                 and email_cooldown["light_intensity"] <= cur_time
@@ -216,7 +216,7 @@ def email_thread():
                 email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
                 email_client.send_light_email(NOTIFICATION_EMAIL)
 
-                print("Sent light email!")
+                print("[Main] Sent light email!")
 
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]

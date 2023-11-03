@@ -27,8 +27,8 @@ class EmailClient:
             server.sendmail(self.my_email, receiver_email, msg.as_string())
 
     def send_light_email(self, receiver_email: str):
-        time_str = time.strftime("%H:%M:%S")
-        body = f"The light is ON, Time: {time_str}"
+        time_str = time.strftime("%I:%M %p")
+        body = f"The light is ON at {time_str}"
 
         self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
 
@@ -64,7 +64,7 @@ class EmailClient:
                 server.store(num, "+FLAGS", "\\Deleted")
 
                 # Check if the message contains YES
-                if body.startswith("YES"):
+                if body.lower().startswith("YES"):
                     server.expunge()
                     server.logout()
 

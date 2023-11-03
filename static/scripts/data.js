@@ -36,7 +36,7 @@ class StateFunctions {
         // Update gradients
         const tempPercentage = Math.min(inverseLerp(State.sensors.temperature, 0, 50), 1);
         const humPercentage = Math.min(inverseLerp(State.sensors.humidity, 0, 100), 1);
-        const lightPercentage = Math.min(inverseLerp(State.sensors.light_intensity, 0, 1000), 1);
+        const lightPercentage = Math.min(inverseLerp(State.sensors.light_intensity, 0, 1024), 1);
 
         $("#gradient_temp > stop").attr("offset", tempPercentage);
         $("#bar_temp").css("width", tempPercentage * 100 + "%");
