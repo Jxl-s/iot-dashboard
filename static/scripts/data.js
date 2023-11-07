@@ -75,7 +75,6 @@ class StateFunctions {
         // Update state
         State.user = user;
 
-        // TODO: Change some visibility stuff
         if (State.user) {
             // Show the loading animation
             $("#user-loaded").removeClass("d-flex").addClass("d-none");

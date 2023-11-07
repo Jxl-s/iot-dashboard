@@ -59,7 +59,7 @@ NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 # Load the user account (0 will indicate no logged in user)
 # TODO: Make this with the RFID reader
 
-user_id = 1
+user_id = 0
 user_info = get_user_by_id(user_id)
 
 
@@ -113,7 +113,6 @@ def login(user_id):
 # Changes the user's preference.
 @app.route("/set-favourites", methods=["POST"])
 def set_favourites():
-    # TODO: Check if the user is logged in, only update their entries
     data = request.get_json()
 
     # Make sure fields are present
@@ -246,13 +245,23 @@ def email_thread():
 # This thread handles the MQTT connection
 def mqtt_thread():
     LIGHT_TOPIC = "room/light_intensity"
+    RFID_TOPIC = "room/rfid_reader"
 
     def on_light(value):
         # Update light intensity
         SENSOR_VALUES["light_intensity"] = value
 
-    client = MQTTClient(host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0)])
+    def on_rfid(value):
+        # TODO: Do something
+        print(f"received RFID tag: {value}")
+
+    # Make the client, initiate callbacks
+    client = MQTTClient(
+        host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0), (RFID_TOPIC, 0)]
+    )
     client.set_callback(topic=LIGHT_TOPIC, callback=on_light, datatype=int)
+    client.set_callback(topic=RFID_TOPIC, callback=on_rfid, datatype=str)
+
     client.connect()
 
 
