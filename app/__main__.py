@@ -176,7 +176,7 @@ def sensor_thread():
         # Light intensity handled by MQTT
 
         socketio.emit("sensor_update", SENSOR_VALUES)
-        # time.sleep(1)
+        time.sleep(1)
 
 
 # This thread handles email-related actions
