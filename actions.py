@@ -47,8 +47,11 @@ def main():
             else:
                 avatar_path = "/static/images/default-user.png"
 
+            # TODO: wait for a scan to happen
+            rfid_tag = f"{random.randint(0, 255)}_{random.randint(0, 255)}_{random.randint(0, 255)}_{random.randint(0, 255)}"
             cur.execute(
                 """INSERT OR IGNORE INTO users (
+                rfid_tag,
                 name,
                 description,
                 avatar,
@@ -56,8 +59,8 @@ def main():
                 humidity_threshold,
                 light_threshold
             )
-            VALUES (?, ?, ?, 24, 50, 400)""",
-                (name, description, avatar_path),
+            VALUES (?, ?, ?, ?, 24, 50, 400)""",
+                (rfid_tag, name, description, avatar_path),
             )
 
             print("User created, with ID", cur.lastrowid)

@@ -8,6 +8,7 @@ with sqlite3.connect(DATABASE_NAME) as con:
     cur.execute(
         """CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            rfid_tag TEXT UNIQUE,
             name TEXT,
             description TEXT,
             avatar TEXT,
@@ -22,6 +23,7 @@ with sqlite3.connect(DATABASE_NAME) as con:
     cur.execute(
         """INSERT OR IGNORE INTO users (
             id,
+            rfid_tag,
             name,
             description,
             avatar,
@@ -29,7 +31,7 @@ with sqlite3.connect(DATABASE_NAME) as con:
             humidity_threshold,
             light_threshold
         )
-        VALUES (1, 'Default User', 'Default user for testing purposes', '/static/images/default-user.jpg', 24, 50, 400)"""
+        VALUES (1, '0_0_0_0', 'Default User', 'Default user for testing purposes', '/static/images/default-user.jpg', 24, 50, 400)"""
     )
 
 
@@ -47,13 +49,13 @@ def get_user_by_id(user_id):
 
         # Return with the correct structure
         return {
-            "name": result[1],
-            "description": result[2],
-            "avatar": result[3],
+            "name": result[2],
+            "description": result[3],
+            "avatar": result[4],
             "favourites": {
-                "temperature": result[4],
-                "humidity": result[5],
-                "light_intensity": result[6],
+                "temperature": result[5],
+                "humidity": result[6],
+                "light_intensity": result[7],
             },
         }
 
