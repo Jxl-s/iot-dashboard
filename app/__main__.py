@@ -175,11 +175,6 @@ def sensor_thread():
         # TODO: Use the real values for light intensity and devices
         # Light intensity handled by MQTT
 
-        #Get near by bluetooth devices
-        nearby_devices = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
-
-        SENSOR_VALUES["devices"] = len(nearby_devices)
-
         socketio.emit("sensor_update", SENSOR_VALUES)
         # time.sleep(1)
 
@@ -273,8 +268,17 @@ def mqtt_thread():
 
     client.connect()
 
+def bluetooth_thread():
+    while True:
+        #Get near by bluetooth devices
+        nearby_devices = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+
+        SENSOR_VALUES["devices"] = len(nearby_devices)
+        time.sleep(1)
+
 
 if __name__ == "__main__":
+    Thread(target=bluetooth_thread).start()
     Thread(target=sensor_thread).start()
     Thread(target=email_thread).start()
     Thread(target=mqtt_thread).start()
