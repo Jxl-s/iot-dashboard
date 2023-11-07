@@ -60,6 +60,20 @@ def get_user_by_id(user_id):
         }
 
 
+def get_user_id_from_tag(rfid_tag):
+    with sqlite3.connect(DATABASE_NAME) as con:
+        # Execute a query
+        cur = con.cursor()
+        cur.execute("SELECT id FROM users WHERE rfid_tag = ?", (rfid_tag,))
+        result = cur.fetchone()
+
+        # If the user does not exist, return None
+        if result is None:
+            return None
+
+        return result[0]
+
+
 # Updates a user's favourite tresholds
 def update_user_favourites(user_id, favourites):
     with sqlite3.connect(DATABASE_NAME) as con:

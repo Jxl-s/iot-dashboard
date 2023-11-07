@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 
 from utils.email import EmailClient
 from utils.mqtt import MQTTClient
-from utils.database import get_user_by_id, update_user_favourites
+from utils.database import get_user_by_id, get_user_id_from_tag, update_user_favourites
 from utils.freenove_dht import DHT
 
 # Load env, and setup the email client
@@ -252,8 +252,11 @@ def mqtt_thread():
         SENSOR_VALUES["light_intensity"] = value
 
     def on_rfid(value):
-        # TODO: Do something
-        print(f"received RFID tag: {value}")
+        # Get user ID from tag
+        new_user_id = get_user_id_from_tag(value)
+        if new_user_id:
+            # Set the new user
+            update_user(new_user_id)
 
     # Make the client, initiate callbacks
     client = MQTTClient(
