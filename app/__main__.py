@@ -7,6 +7,7 @@ except ImportError:
 import json
 import os
 import time
+import bluetooth
 
 from flask import Flask, request, send_file
 from flask_socketio import SocketIO
@@ -21,6 +22,7 @@ from utils.email import EmailClient
 from utils.mqtt import MQTTClient
 from utils.database import get_user_by_id, get_user_id_from_tag, update_user_favourites
 from utils.freenove_dht import DHT
+
 
 # Load env, and setup the email client
 load_dotenv()
@@ -96,7 +98,7 @@ def get_data():
 
 
 # Handle logout
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["POSTfrom pybluez"])
 def logout():
     # User with ID 0 does not exist, so the profile will be None
     update_user(0)
@@ -172,10 +174,12 @@ def sensor_thread():
 
         # TODO: Use the real values for light intensity and devices
         # Light intensity handled by MQTT
-        SENSOR_VALUES["devices"] = 0
+        nearby_devices = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+        print("Found {} devices".format(len(nearby_devices)))
+        SENSOR_VALUES["devices"] = len(nearby_devices)
 
         socketio.emit("sensor_update", SENSOR_VALUES)
-        time.sleep(1)
+        # time.sleep(1)
 
 
 # This thread handles email-related actions
