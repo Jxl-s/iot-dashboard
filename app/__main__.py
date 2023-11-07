@@ -98,7 +98,7 @@ def get_data():
 
 
 # Handle logout
-@app.route("/logout", methods=["POSTfrom pybluez"])
+@app.route("/logout", methods=["POST"])
 def logout():
     # User with ID 0 does not exist, so the profile will be None
     update_user(0)
