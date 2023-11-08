@@ -63,7 +63,7 @@ def main():
                 (rfid_tag, name, description, avatar_path),
             )
 
-            print("User created, with ID", cur.lastrowid)
+            print(f"User created, with ID ({cur.lastrowid}), with tag ({rfid_tag})")
 
         if action == "--login":
             userid = sys.argv[2]

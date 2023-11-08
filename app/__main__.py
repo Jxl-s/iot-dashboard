@@ -268,10 +268,13 @@ def mqtt_thread():
 
     client.connect()
 
+
 def bluetooth_thread():
     while True:
-        #Get near by bluetooth devices
-        nearby_devices = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+        # Get nearby bluetooth devices
+        nearby_devices = bluetooth.discover_devices(
+            duration=8, lookup_names=True, flush_cache=True, lookup_class=False
+        )
 
         SENSOR_VALUES["devices"] = len(nearby_devices)
         time.sleep(1)
