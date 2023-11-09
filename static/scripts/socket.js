@@ -11,7 +11,15 @@ $(document).ready(async function () {
     const data = await initRes.json();
 
     // Set the initial values
-    StateFunctions.updateSensors(data.sensors);
+    StateFunctions.updateDHT({
+        temperature: data.sensors.temperature,
+        humidity: data.sensors.humidity,
+    });
+
+    StateFunctions.updateLightIntensity(data.sensors.light_intensity);
+    StateFunctions.updateDevices(data.sensors.devices);
+
+    // Set other data
     StateFunctions.updateUser(data.user);
     StateFunctions.updateLight(data.states.light);
     StateFunctions.updateFan(data.states.fan);
@@ -24,7 +32,10 @@ $(document).ready(async function () {
     const socket = io();
     document._socket = socket;
 
-    socket.on("sensor_update", (data) => StateFunctions.updateSensors(data));
+    socket.on("dht_update", (data) => StateFunctions.updateDHT(data));
+    socket.on("light_intensity_update", (data) => StateFunctions.updateLightIntensity(data));
+    socket.on("devices_update", (data) => StateFunctions.updateDevices(data));
+
     socket.on("light_update", (status) => StateFunctions.updateLight(status));
     socket.on("fan_update", (status) => StateFunctions.updateFan(status));
     socket.on("user_update", (user) => StateFunctions.updateUser(user));

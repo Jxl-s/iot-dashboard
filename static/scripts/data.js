@@ -20,23 +20,18 @@ const State = {
  * Will be accessed by other functions to update the state
  */
 class StateFunctions {
-    static updateSensors(data) {
+    static updateDHT(data) {
         // Update state
         State.sensors.temperature = data.temperature;
         State.sensors.humidity = data.humidity;
-        State.sensors.light_intensity = data.light_intensity ?? 0;
-        State.sensors.devices = data.devices;
 
         // Update displays
         $("#sensor-temp-val").text(roundTwoDecimals(State.sensors.temperature));
         $("#sensor-hum-val").text(roundTwoDecimals(State.sensors.humidity));
-        $("#sensor-light-val").text(numberWithCommas(State.sensors.light_intensity));
-        $("#sensor-devices-val").text(numberWithCommas(State.sensors.devices));
 
         // Update gradients
         const tempPercentage = Math.min(inverseLerp(State.sensors.temperature, 0, 50), 1);
         const humPercentage = Math.min(inverseLerp(State.sensors.humidity, 0, 100), 1);
-        const lightPercentage = Math.min(inverseLerp(State.sensors.light_intensity, 0, 1024), 1);
 
         $("#gradient_temp > stop").attr("offset", tempPercentage);
         $("#bar_temp").css("width", tempPercentage * 100 + "%");
@@ -44,8 +39,30 @@ class StateFunctions {
         $("#gradient_hum > stop").attr("offset", humPercentage);
         $("#bar_hum").css("width", humPercentage * 100 + "%");
 
+        Favourites.updateArrows();
+    }
+
+    static updateLightIntensity(data) {
+        // Update state
+        State.sensors.light_intensity = data ?? 0;
+
+        // Update displays
+        $("#sensor-light-val").text(numberWithCommas(State.sensors.light_intensity));
+
+        // Update gradients
+        const lightPercentage = Math.min(inverseLerp(State.sensors.light_intensity, 0, 1024), 1);
         $("#gradient_light > stop").attr("offset", lightPercentage);
         $("#bar_light").css("width", lightPercentage * 100 + "%");
+
+        Favourites.updateArrows();
+    }
+
+    static updateDevices(data) {
+        // Update state
+        State.sensors.devices = data ?? 0;
+
+        // Update displays
+        $("#sensor-devices-val").text(numberWithCommas(State.sensors.devices));
 
         // Update arrows
         Favourites.updateArrows();

@@ -175,7 +175,11 @@ def sensor_thread():
         # TODO: Use the real values for light intensity and devices
         # Light intensity handled by MQTT
 
-        socketio.emit("sensor_update", SENSOR_VALUES)
+        socketio.emit("dht_update", {
+            "temperature": SENSOR_VALUES["temperature"],
+            "humidity": SENSOR_VALUES["humidity"],
+        })
+
         time.sleep(1)
 
 
@@ -251,6 +255,7 @@ def mqtt_thread():
     def on_light(value):
         # Update light intensity
         SENSOR_VALUES["light_intensity"] = value
+        socketio.emit("light_intensity_update", SENSOR_VALUES["light_intensity"])
 
     def on_rfid(value):
         # Get user ID from tag, make sure it's an existing tag
@@ -284,6 +289,8 @@ def bluetooth_thread():
         )
 
         SENSOR_VALUES["devices"] = len(nearby_devices)
+        socketio.emit("devices_update", SENSOR_VALUES["devices"])
+
         time.sleep(1)
 
 
