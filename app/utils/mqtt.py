@@ -48,8 +48,6 @@ class MQTTClient:
 
     # -- Private methods --
     def _on_connect(self, client, userdata, flags, rc):
-        print(f"[MQTT] Connected with result code {str(rc)}")
-
         # Subscribe to provided topics
         client.subscribe(self.topics)
 

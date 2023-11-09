@@ -253,11 +253,18 @@ def mqtt_thread():
         SENSOR_VALUES["light_intensity"] = value
 
     def on_rfid(value):
-        # Get user ID from tag
+        # Get user ID from tag, make sure it's an existing tag
         new_user_id = get_user_id_from_tag(value)
-        if new_user_id:
-            # Set the new user
-            update_user(new_user_id)
+        if not new_user_id:
+            return
+
+        # Make sure the user is currently logged out
+        if user_info:
+            print("[Main] Cannot login: must log out first")
+            return
+
+        # Update the user
+        update_user(new_user_id)
 
     # Make the client, initiate callbacks
     client = MQTTClient(
