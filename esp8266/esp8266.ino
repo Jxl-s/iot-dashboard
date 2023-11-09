@@ -1,18 +1,32 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <SPI.h>
+#include <MFRC522.h>
 
 // WiFi connection
-#define WIFI_SSID "ssid_here"
-#define WIFI_PASSWORD "password_here"
+#define WIFI_SSID "Oooooooooo"
+#define WIFI_PASSWORD "BalanceGame"
 
 // MQTT
-#define MQTT_HOST "192.168.1.2"
+#define MQTT_HOST "172.20.10.7"
 #define MQTT_NAME "intellihouse-iot"
-
-#define MQTT_LIGHT_TOPIC "room/light_intensity"
 
 // Pins
 #define P_RESISTOR_PIN A0
+
+// RFID Pins
+#define SS_PIN D8
+#define RST_PIN D0
+
+// Define Topic 
+
+#define MQTT_RFID_TOPIC "room/rfid_reader"
+#define MQTT_LIGHT_TOPIC "room/light_intensity"
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+long now = millis();
+long lastTime = 0;
 
 WiFiClient wifi_client;
 PubSubClient client(wifi_client);
@@ -50,7 +64,7 @@ void callback(String topic, byte *message, unsigned int length) {
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (client.connect(MQTT_NAME)) {
+    if (client.connect("wifi_client")) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
@@ -68,6 +82,8 @@ void setup() {
   client.setServer(MQTT_HOST, 1883);
   client.setCallback(callback);
   pinMode(P_RESISTOR_PIN, INPUT);
+  SPI.begin();      
+  mfrc522.PCD_Init();
 }
 
 void loop() {
@@ -78,9 +94,30 @@ void loop() {
   if (!client.loop())
     client.connect(MQTT_NAME);
 
-  int value = analogRead(P_RESISTOR_PIN);
-  String stringValue = String(value);
-  client.publish(MQTT_LIGHT_TOPIC, stringValue.c_str());
+  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+    Serial.println("GOT CARD");
 
-  delay(1000);
+    String id = "";
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+      id += String(mfrc522.uid.uidByte[i], HEX);
+      if (i < mfrc522.uid.size - 1)
+        id += "-";
+    }
+  
+    Serial.print("UID: ");
+    Serial.println(id);
+
+    client.publish(MQTT_RFID_TOPIC, id.c_str());
+
+    mfrc522.PICC_HaltA();
+    delay(5000);
+  }
+
+  now = millis();
+  if(now - lastTime > 1000) {
+    lastTime = now; 
+    int value = analogRead(P_RESISTOR_PIN);
+    String stringValue = String(value);
+    client.publish(MQTT_LIGHT_TOPIC, stringValue.c_str());
+  }
 }

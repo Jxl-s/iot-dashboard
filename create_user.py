@@ -37,8 +37,9 @@ if avatar_path:
     shutil.copy(avatar_path, new_path)
     avatar_path = f"/static/images/{random_name}"
 else:
-    avatar_path = "/static/images/default-user.png"
+    avatar_path = "/static/images/default-user.jpg"
 
+print(avatar_path) 
 print("[User Create] Scan your RFID tag...")
 
 
