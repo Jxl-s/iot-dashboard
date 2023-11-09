@@ -18,7 +18,7 @@
 #define SS_PIN D8
 #define RST_PIN D0
 
-// Define Topic 
+// Define Topic
 
 #define MQTT_RFID_TOPIC "room/rfid_reader"
 #define MQTT_LIGHT_TOPIC "room/light_intensity"
@@ -31,7 +31,8 @@ long lastTime = 0;
 WiFiClient wifi_client;
 PubSubClient client(wifi_client);
 
-void setup_wifi() {
+void setup_wifi()
+{
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
@@ -39,7 +40,8 @@ void setup_wifi() {
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -49,24 +51,31 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-void callback(String topic, byte *message, unsigned int length) {
+void callback(String topic, byte *message, unsigned int length)
+{
   Serial.print("Message arrived on topic: ");
   Serial.print(topic);
   Serial.print(". Message: ");
   String messagein;
 
-  for (int i = 0; i < length; i++) {
+  for (int i = 0; i < length; i++)
+  {
     Serial.print((char)message[i]);
     messagein += (char)message[i];
   }
 }
 
-void reconnect() {
-  while (!client.connected()) {
+void reconnect()
+{
+  while (!client.connected())
+  {
     Serial.print("Attempting MQTT connection...");
-    if (client.connect("wifi_client")) {
+    if (client.connect("wifi_client"))
+    {
       Serial.println("connected");
-    } else {
+    }
+    else
+    {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 3 seconds");
@@ -76,46 +85,50 @@ void reconnect() {
   }
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   setup_wifi();
   client.setServer(MQTT_HOST, 1883);
   client.setCallback(callback);
   pinMode(P_RESISTOR_PIN, INPUT);
-  SPI.begin();      
+  SPI.begin();
   mfrc522.PCD_Init();
 }
 
-void loop() {
-  if (!client.connected()) {
+void loop()
+{
+  if (!client.connected())
+  {
     reconnect();
   }
 
   if (!client.loop())
     client.connect(MQTT_NAME);
 
-  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial())
+  {
     Serial.println("GOT CARD");
 
     String id = "";
-    for (byte i = 0; i < mfrc522.uid.size; i++) {
+    for (byte i = 0; i < mfrc522.uid.size; i++)
+    {
       id += String(mfrc522.uid.uidByte[i], HEX);
       if (i < mfrc522.uid.size - 1)
         id += "-";
     }
-  
+
     Serial.print("UID: ");
     Serial.println(id);
 
     client.publish(MQTT_RFID_TOPIC, id.c_str());
-
     mfrc522.PICC_HaltA();
-    delay(5000);
   }
 
   now = millis();
-  if(now - lastTime > 1000) {
-    lastTime = now; 
+  if (now - lastTime > 1000)
+  {
+    lastTime = now;
     int value = analogRead(P_RESISTOR_PIN);
     String stringValue = String(value);
     client.publish(MQTT_LIGHT_TOPIC, stringValue.c_str());
