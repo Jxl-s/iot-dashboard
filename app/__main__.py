@@ -45,6 +45,8 @@ SENSOR_VALUES = {
     "devices": 0,
 }
 
+CONFIG_VALUES = {"rssi_threshold": -50}
+
 # Set the initial values of DHT11
 print("[Main] Reading DHT11...")
 if dht.readDHT11() == dht.DHTLIB_OK:
@@ -92,7 +94,12 @@ def index():
 def get_data():
     # If they are not logged in, use False as user.
     response = json.dumps(
-        {"states": STATES, "sensors": SENSOR_VALUES, "user": user_info}
+        {
+            "states": STATES,
+            "sensors": SENSOR_VALUES,
+            "user": user_info,
+            "config": CONFIG_VALUES,
+        }
     )
     return response, 200, {"Content-Type": "application/json"}
 
@@ -143,6 +150,19 @@ def set_favourites():
     return user_info["favourites"], 200, {"Content-Type": "application/json"}
 
 
+@app.route("/set-rssi", methods=["POST"])
+def set_rssi():
+    data = request.get_json()
+    if data["rssi"] is None:
+        return "Missing data", 400
+
+    if not isinstance(data["rssi"], (int)):
+        return "Invalid rssi", 400
+
+    CONFIG_VALUES["rssi_threshold"] = data["rssi"]
+    return "OK", 200
+
+
 # Fan
 @socketio.on("set_fan")
 def set_fan(status):
@@ -175,10 +195,13 @@ def sensor_thread():
         # TODO: Use the real values for light intensity and devices
         # Light intensity handled by MQTT
 
-        socketio.emit("dht_update", {
-            "temperature": SENSOR_VALUES["temperature"],
-            "humidity": SENSOR_VALUES["humidity"],
-        })
+        socketio.emit(
+            "dht_update",
+            {
+                "temperature": SENSOR_VALUES["temperature"],
+                "humidity": SENSOR_VALUES["humidity"],
+            },
+        )
 
         time.sleep(1)
 
@@ -283,6 +306,7 @@ def mqtt_thread():
 
 def bluetooth_thread():
     while True:
+        # TODO: check with the rssi threshold
         # Get nearby bluetooth devices
         nearby_devices = bluetooth.discover_devices(
             duration=8, lookup_names=True, flush_cache=True, lookup_class=False

@@ -1,5 +1,6 @@
 const Favourites = {};
 
+// Indicate how much the values can differ from the favourites
 const TEMP_TRESHOLD = 1;
 const HUM_TRESHOLD = 5;
 const LIGHT_TRESHOLD = 50;
@@ -155,6 +156,29 @@ $(document).ready(async function () {
     $("#submit-fav-btn").click(() => {
         // Submit the form
         Favourites.submit();
+    });
+
+    $("#rssi-input").focusout(async () => {
+        const val = $("#rssi-input").val();
+
+        // If it's not an integer, reset the value
+        const intVal = parseInt(val);
+
+        if (isNaN(intVal)) {
+            return $("#rssi-input").val(State.rssi_threshold);
+        }
+
+        $("#rssi-input").val(intVal);
+
+        // Send update
+        await fetch("/set-rssi", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ rssi: intVal }),
+        });
     });
 
     $("#logout-btn").click(User.logout);

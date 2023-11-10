@@ -23,6 +23,7 @@ $(document).ready(async function () {
     StateFunctions.updateUser(data.user);
     StateFunctions.updateLight(data.states.light);
     StateFunctions.updateFan(data.states.fan);
+    StateFunctions.updateRSSI(data.config.rssi_threshold);
 
     if (data.user) {
         StateFunctions.updateFavourites(data.user.favourites);

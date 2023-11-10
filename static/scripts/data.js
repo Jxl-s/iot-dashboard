@@ -12,6 +12,7 @@ const State = {
         humidity: 0,
         light_intensity: 0,
     },
+    rssi_threshold: -50,
     light: false,
     fan: false,
 };
@@ -148,5 +149,13 @@ class StateFunctions {
 
         // Update displays
         Fan.setState(State.fan);
+    }
+
+    static updateRSSI(value) {
+        // Update state
+        State.rssi_threshold = value;
+
+        // Update displays
+        $("#rssi-input").val(State.rssi_threshold);
     }
 }
