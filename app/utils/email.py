@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 import time
 
 LIGHT_EMAIL_SUBJECT = "IntelliHouse - Light status change"
+LOGIN_EMAIL_SUBJECT = "IntelliHouse - User login"
 TEMP_EMAIL_SUBJECT = "IntelliHouse - Temperature is high"
 
 
@@ -26,11 +27,19 @@ class EmailClient:
             server.login(self.my_email, self.my_password)
             server.sendmail(self.my_email, receiver_email, msg.as_string())
 
+    # Alert that the light is now on
     def send_light_email(self, receiver_email: str):
         time_str = time.strftime("%I:%M %p")
         body = f"The light is ON at {time_str}"
 
         self.send_email(receiver_email, LIGHT_EMAIL_SUBJECT, body)
+
+    # Alert that someone has logged in
+    def send_login_email(self, user_info, receiver_email: str):
+        time_str = time.strftime("%I:%M %p")
+        body = f'User "{user_info["name"]}" logged in at {time_str}'
+
+        self.send_email(receiver_email, LOGIN_EMAIL_SUBJECT, body)
 
     # Alerts high temperature, and asks if user wants to turn on the fan
     def send_temp_email(self, receiver_email: str, temp: float, prefered_temp: float):

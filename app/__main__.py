@@ -293,6 +293,7 @@ def mqtt_thread():
 
         # Update the user
         update_user(new_user_id)
+        email_client.send_login_email(user_info, NOTIFICATION_EMAIL)
 
     # Make the client, initiate callbacks
     client = MQTTClient(
