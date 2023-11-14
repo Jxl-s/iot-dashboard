@@ -319,9 +319,15 @@ def bluetooth_thread():
 
 
 if __name__ == "__main__":
-    Thread(target=bluetooth_thread).start()
-    Thread(target=sensor_thread).start()
-    Thread(target=email_thread).start()
-    Thread(target=mqtt_thread).start()
-
-    app.run(host="0.0.0.0", port=3333)
+    try:
+        Thread(target=bluetooth_thread).start()
+        Thread(target=sensor_thread).start()
+        Thread(target=email_thread).start()
+        Thread(target=mqtt_thread).start()
+        app.run(host="0.0.0.0", port=3333)
+    except KeyboardInterrupt:
+        print("Interrupted by keyboard")
+    except Exception as e:
+        print("Other error or exception occurred!", e)
+    finally:
+        GPIO.cleanup()  # Ensures a clean exit
