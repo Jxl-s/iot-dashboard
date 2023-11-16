@@ -245,6 +245,10 @@ def email_thread():
 
                 print("[Main] Sent light email!")
 
+        if (light > prefered_light and STATES["light"]):
+            # Change the light
+            set_light(False)
+
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]
         prefered_temp = user_info["favourites"]["temperature"]

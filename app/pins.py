@@ -25,3 +25,9 @@ def setup():
     GPIO.setup(PINS["MOTOR_EN"], GPIO.OUT)
     GPIO.setup(PINS["MOTOR_IN1"], GPIO.OUT)
     GPIO.setup(PINS["MOTOR_IN2"], GPIO.OUT)
+
+    # Reset values
+    GPIO.output(PINS["LED"], GPIO.LOW)
+    GPIO.output(PINS["MOTOR_EN"], GPIO.LOW)
+    GPIO.output(PINS["MOTOR_IN1"], GPIO.LOW)
+    GPIO.output(PINS["MOTOR_IN2"], GPIO.LOW)
