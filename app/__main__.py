@@ -313,13 +313,20 @@ def bluetooth_thread():
     while True:
         # TODO: check with the rssi threshold
         # Get nearby bluetooth devices
-        nearby_devices = bluetooth.discover_devices(
-            duration=8, lookup_names=True, flush_cache=True, lookup_class=False
-        )
+        with open("bl.out") as file:
+            bl_count = 0
 
-        SENSOR_VALUES["devices"] = len(nearby_devices)
+            for line in file:
+                columns = line.split()
+                if len(columns) <= 1:
+                    continue
+
+                if int(columns[1]) > CONFIG_VALUES["rssi_threshold"]:
+                    bl_count += 1
+            
+            SENSOR_VALUES["devices"] = bl_count
+
         socketio.emit("devices_update", SENSOR_VALUES["devices"])
-
         time.sleep(1)
 
 
