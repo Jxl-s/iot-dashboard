@@ -7,7 +7,6 @@ except ImportError:
 import json
 import os
 import time
-import bluetooth
 
 from flask import Flask, request, send_file
 from flask_socketio import SocketIO
@@ -45,7 +44,7 @@ SENSOR_VALUES = {
     "devices": 0,
 }
 
-CONFIG_VALUES = {"rssi_threshold": -50}
+CONFIG_VALUES = {"rssi_threshold": -100}
 
 # Set the initial values of DHT11
 print("[Main] Reading DHT11...")
@@ -323,7 +322,7 @@ def bluetooth_thread():
 
                 if int(columns[1]) > CONFIG_VALUES["rssi_threshold"]:
                     bl_count += 1
-            
+
             SENSOR_VALUES["devices"] = bl_count
 
         socketio.emit("devices_update", SENSOR_VALUES["devices"])

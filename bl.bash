@@ -7,7 +7,7 @@ while IFS= read -r line; do
     fifth_word=$(echo "$line" | awk '{print $5}')
 
     if [[ $first_word == *"NEW"* ]]; then
-        devices["$third_word"]=-999
+        devices["$third_word"]=-1000
     fi
 
     if [[ $first_word == *"DEL"* ]]; then
