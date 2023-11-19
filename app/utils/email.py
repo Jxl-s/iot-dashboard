@@ -26,6 +26,7 @@ class EmailClient:
             server.starttls()
             server.login(self.my_email, self.my_password)
             server.sendmail(self.my_email, receiver_email, msg.as_string())
+            server.quit()
 
     # Alert that the light is now on
     def send_light_email(self, receiver_email: str):

@@ -230,23 +230,22 @@ def email_thread():
         prefered_light = user_info["favourites"]["light_intensity"]
 
         if not (light is None):
-            if (
-                light < prefered_light
-                and email_cooldown["light_intensity"] <= cur_time
-                and not STATES["light"]
-            ):
+            if light < prefered_light and not STATES["light"]:
                 # Change the light
                 set_light(True)
+                print("[Main] Turn light ON!")
 
                 # Send the email
-                email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
-                email_client.send_light_email(NOTIFICATION_EMAIL)
+                if email_cooldown["light_intensity"] <= cur_time:
+                    email_cooldown["light_intensity"] = cur_time + EMAIL_TIMEOUT
+                    email_client.send_light_email(NOTIFICATION_EMAIL)
 
-                print("[Main] Sent light email!")
+                    print("[Main] Sent light email!")
 
-        if (light > prefered_light and STATES["light"]):
-            # Change the light
-            set_light(False)
+            if light > prefered_light and STATES["light"]:
+                # Change the light
+                set_light(False)
+                print("[Main] Turn light OFF!")
 
         # Handle temperature
         temp = SENSOR_VALUES["temperature"]
