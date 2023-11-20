@@ -73,8 +73,9 @@ class EmailClient:
                 # Delete the email
                 server.store(num, "+FLAGS", "\\Deleted")
 
-                # Check if the message contains YES
-                if body.lower().startswith("yes"):
+                # Only look at first line
+                first_line = body.split("\n")[0] if body else ""
+                if "yes" in first_line.lower():
                     server.expunge()
                     server.logout()
 
