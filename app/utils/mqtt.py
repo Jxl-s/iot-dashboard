@@ -49,6 +49,7 @@ class MQTTClient:
     # -- Private methods --
     def _on_connect(self, client, userdata, flags, rc):
         # Subscribe to provided topics
+        print("[MQTT] Connected to broker")
         client.subscribe(self.topics)
 
     def _on_message(self, client, userdata, msg):

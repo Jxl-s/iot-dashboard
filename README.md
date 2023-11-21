@@ -4,25 +4,30 @@ Project for 420-531-VA (Internet of Things)
 ## Getting Started
 Create a file `.env`, containing the following
 ```
+NOTIFICATION_EMAIL=<notification recipient>
+
 EMAIL_ADDRESS=<email address>
 EMAIL_PASSWORD=<email password>
 ```
 
-Run the following command to install the required libraries
+Run the following commands to install the required libraries
 ```bash
 pip install -r requirements.txt
+npm install
 ```
 
-Then, run the following command to start the application
+Run the following terminals simultaneously
+1. Bluetooth packet listener
+```bash
+sudo node ./bluetooth.js
+```
+2. IoT Dashboard
 ```bash
 python app
 ```
 
 ## To create profiles
-Run the following command, and select an image to upload.
-Note that if you don't select a profile picture, the default one
-will be used. A description is optional.
-
+Run the following command, and follow the steps and scan your card
 ```bash
-python actions.py --create "username here" "description here"
+python create_user.py
 ```

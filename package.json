@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "barnowl-hci": "^0.3.3",
+    "mqtt": "^5.3.0",
+    "raddec": "^0.5.0"
+  }
+}

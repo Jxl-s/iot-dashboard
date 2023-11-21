@@ -45,6 +45,7 @@ SENSOR_VALUES = {
 }
 
 CONFIG_VALUES = {"rssi_threshold": -100}
+RSSI_ARRAY = []
 
 # Set the initial values of DHT11
 print("[Main] Reading DHT11...")
@@ -276,6 +277,7 @@ def email_thread():
 def mqtt_thread():
     LIGHT_TOPIC = "room/light_intensity"
     RFID_TOPIC = "room/rfid_reader"
+    DEVICES_TOPIC = "room/devices"
 
     def on_light(value):
         # Update light intensity
@@ -297,32 +299,27 @@ def mqtt_thread():
         update_user(new_user_id)
         email_client.send_login_email(user_info, NOTIFICATION_EMAIL)
 
+    def on_devices(devices):
+        global RSSI_ARRAY
+
+        devices = json.loads(devices)
+        RSSI_ARRAY = devices
+
     # Make the client, initiate callbacks
     client = MQTTClient(
-        host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0), (RFID_TOPIC, 0)]
+        host="localhost", port=1883, topics=[(LIGHT_TOPIC, 0), (RFID_TOPIC, 0), (DEVICES_TOPIC, 0)]
     )
     client.set_callback(topic=LIGHT_TOPIC, callback=on_light, datatype=int)
     client.set_callback(topic=RFID_TOPIC, callback=on_rfid, datatype=str)
+    client.set_callback(topic=DEVICES_TOPIC, callback=on_devices, datatype=str)
 
     client.connect()
 
 
 def bluetooth_thread():
     while True:
-        # TODO: check with the rssi threshold
-        # Get nearby bluetooth devices
-        with open("bl.out") as file:
-            bl_count = 0
-
-            for line in file:
-                columns = line.split()
-                if len(columns) <= 1:
-                    continue
-
-                if int(columns[1]) > CONFIG_VALUES["rssi_threshold"]:
-                    bl_count += 1
-
-            SENSOR_VALUES["devices"] = bl_count
+        bl_count = sum(1 for num in RSSI_ARRAY if num > CONFIG_VALUES["rssi_threshold"])
+        SENSOR_VALUES["devices"] = bl_count
 
         socketio.emit("devices_update", SENSOR_VALUES["devices"])
         time.sleep(1)
