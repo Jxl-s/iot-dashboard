@@ -320,6 +320,11 @@ def email_thread():
 
             print("[Main] Sent temperature email")
 
+        if temp < prefered_temp and STATES["fan"]:
+            # Change the light
+            set_fan(False)
+            print("[Main] Turn fan OFF!")
+
         # Check for a response from the temperature
         response = email_client.check_temp_res(NOTIFICATION_EMAIL)
         if response:
