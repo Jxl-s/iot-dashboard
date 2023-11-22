@@ -3,9 +3,10 @@ const DISCONNECT_DELAY = 10 * 1000; // No packet for 10 seconds => disconnect
 
 const BarnowlHci = require("barnowl-hci");
 const mqtt = require("mqtt");
+const Raddec = require("raddec");
 
 // Await for a mqtt connection to happen
-const client = mqtt.connect("mqtt://localhost:1883");
+const client = mqtt.connect("mqtt://0.0.0.0:1883");
 client.on("connect", () => {
     console.log("[Bluetooth] Connected to broker!");
 
@@ -16,7 +17,7 @@ client.on("connect", () => {
     // Listen to events
     const bluetoothDevices = {}
     barnowl.on('raddec', function (raddec) {
-        if (raddec.transmitterIdType !== 3) return;
+        if (raddec.transmitterIdType !== Raddec.identifiers.TYPE_RND48) return;
         bluetoothDevices[raddec.transmitterId] = [raddec.rssiSignature?.[0]?.rssi ?? -1000, raddec.creationTime];
     });
 

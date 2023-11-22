@@ -4,7 +4,14 @@ import random
 import shutil
 import sqlite3
 import string
-from tkinter import filedialog
+
+use_avatar = True
+try:
+    from tkinter import filedialog
+except Exception:
+    # In case the raspberry pi doesn't have tkinter
+    print("[User Create] No tkinter")
+    use_avatar = False
 
 # Utilities
 from app.utils.database import get_user_id_from_tag, DATABASE_NAME
@@ -23,23 +30,26 @@ name = input("- Name: ")
 description = input("- Description: ")
 
 # Avatar prompt
-print("[User Create] Select a profile picture...")
+avatar_path = "/static/images/default-user.jpg"
+if use_avatar:
+    print("[User Create] Select a profile picture...")
 
-file_types = "*.png *.jpg *.jpeg *.bmp"
-avatar_path = filedialog.askopenfilename(filetypes=[("Image files", file_types)])
+    file_types = "*.png *.jpg *.jpeg *.bmp"
+    avatar_path = filedialog.askopenfilename(filetypes=[("Image files", file_types)])
 
-if avatar_path:
-    _, extension = os.path.splitext(os.path.basename(avatar_path))
-    random_name = generate_random_string(16) + extension
+    if avatar_path:
+        _, extension = os.path.splitext(os.path.basename(avatar_path))
+        random_name = generate_random_string(16) + extension
 
-    new_path = os.path.join("./static/images/", random_name)
+        new_path = os.path.join("./static/images/", random_name)
 
-    shutil.copy(avatar_path, new_path)
-    avatar_path = f"/static/images/{random_name}"
-else:
-    avatar_path = "/static/images/default-user.jpg"
+        shutil.copy(avatar_path, new_path)
+        avatar_path = f"/static/images/{random_name}"
+    else:
+        avatar_path = "/static/images/default-user.jpg"
 
-print(avatar_path) 
+    print(avatar_path)
+
 print("[User Create] Scan your RFID tag...")
 
 
