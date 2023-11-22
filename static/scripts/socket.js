@@ -41,5 +41,7 @@ $(document).ready(async function () {
     socket.on("fan_update", (status) => StateFunctions.updateFan(status));
     socket.on("user_update", (user) => StateFunctions.updateUser(user));
 
+    socket.on("user_created", (user) => User.userCreated(user));
+
     State._initialized = true;
 });

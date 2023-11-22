@@ -6,6 +6,8 @@ except ImportError:
 
 import json
 import os
+import random
+import string
 import time
 
 from flask import Flask, request, send_file
@@ -19,7 +21,7 @@ from dotenv import load_dotenv
 
 from utils.email import EmailClient
 from utils.mqtt import MQTTClient
-from utils.database import get_user_by_id, get_user_id_from_tag, update_user_favourites
+from utils.database import get_user_by_id, get_user_id_from_tag, create_user, update_user_favourites
 from utils.freenove_dht import DHT
 
 
@@ -162,6 +164,61 @@ def set_rssi():
     CONFIG_VALUES["rssi_threshold"] = data["rssi"]
     return "OK", 200
 
+creating_user = None
+def on_tag_scanned(tag):
+    global creating_user
+    if not creating_user:
+        return False
+
+    # Make sure it's not an existing card
+    if get_user_id_from_tag(tag) is not None:
+        socketio.emit("user_created", False)
+        creating_user = None
+        return True
+    
+    # Create the user now
+    new_user = create_user(tag, creating_user['name'], creating_user['description'], creating_user['profile'])
+
+    socketio.emit("user_created", new_user)
+    creating_user = None
+
+    return True
+
+def generate_random_string(length):
+    alphabet = string.ascii_letters + string.digits
+    return "".join(random.choice(alphabet) for i in range(length))
+
+@app.route("/create-user", methods=["POST"])
+def on_create_user():
+    global creating_user
+
+    name = request.form.get("name")
+    description = request.form.get("description")
+    profile = request.files.get("picture")
+
+    # Make sure name and desc are not empty
+    if not name or not description:
+        return "Missing data", 400
+
+    # Make sure the profile is a valid type
+    if profile and not profile.filename.endswith((".png", ".jpg", ".jpeg")):
+        return "Invalid profile", 400
+
+    # Upload the image
+    _, extension = os.path.splitext(os.path.basename(profile.filename))
+    random_name = generate_random_string(16) + extension
+
+    new_path = os.path.join("./static/images/", random_name)
+    profile.save(new_path)
+
+    # Put this in the creating_user
+    creating_user = {
+        "name": name,
+        "description": description,
+        "profile": new_path,
+    }
+
+    return "OK", 200
 
 # Fan
 @socketio.on("set_fan")
@@ -285,6 +342,10 @@ def mqtt_thread():
         socketio.emit("light_intensity_update", SENSOR_VALUES["light_intensity"])
 
     def on_rfid(value):
+        # For user creation
+        if on_tag_scanned(value):
+            return
+
         # Get user ID from tag, make sure it's an existing tag
         new_user_id = get_user_id_from_tag(value)
         if not new_user_id:

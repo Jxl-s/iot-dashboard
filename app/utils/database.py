@@ -88,3 +88,25 @@ def update_user_favourites(user_id, favourites):
                 user_id,
             ),
         )
+
+def create_user(rfid_tag, name, description, avatar_path):
+    with sqlite3.connect(DATABASE_NAME) as con:
+        cur = con.cursor()
+        cur.execute(
+            """INSERT OR IGNORE INTO users (
+            rfid_tag,
+            name,
+            description,
+            avatar,
+            temp_threshold,
+            humidity_threshold,
+            light_threshold
+        )
+        VALUES (?, ?, ?, ?, 24, 50, 400)""",
+            (rfid_tag, name, description, avatar_path),
+        )
+
+        con.commit()
+
+    # Return the user object of the new created user
+    return get_user_by_id(cur.lastrowid)

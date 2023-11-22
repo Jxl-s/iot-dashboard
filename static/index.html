@@ -34,10 +34,60 @@
                 </svg>
 
                 <b class="dash-title">IntelliHouse - Dashboard</b>
+                <button type="button" class="btn btn-secondary ms-4" data-bs-toggle="modal"
+                    data-bs-target="#create-user-modal">
+                    + Create User
+                </button>
             </div>
             <div class="d-flex justify-content-center align-items-end flex-column">
                 <div id="time-label" class="lg-card-highlight"></div>
                 <div id="day-label" class="section-title"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="create-user-modal" tabindex="-1" aria-labelledby="create-user-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="padding: 0; background-color: #333333;" id="create-user-content">
+                    <div class="modal-header">
+                        <div class="dash-title">Create User</div>
+                    </div>
+                    <form id="create-user-form" class="modal-body">
+                        <label for="create-user-name">Username</label>
+                        <input class="form-control" type="text" id="create-user-name" name="name"
+                            style="background-color: #222222; border: none; color: white;" placeholder="User" />
+                        <label for="create-user-description" class="mt-2">User Description</label>
+                        <input class="form-control" type="text" id="create-user-description" name="description"
+                            style="background-color: #222222; border: none; color: white;"
+                            placeholder="This is a user" />
+                        <label for="create-user-picture" class="mt-2">Profile Picture (optional)</label>
+                        <input class="form-control" type="file" id="create-user-picture" name="picture"
+                            style="background-color: #222222; border: none; color: white;" accept=".png, .jpg, .jpeg" />
+
+                        <button class="w-100 btn btn-primary mt-2" id="create-user-button">Create User</button>
+                        <div class="text-danger mt-2" id="create-user-error"></div>
+                    </form>
+                </div>
+                <div class="modal-content hide" style="padding: 0; background-color: #333333;" id="create-user-waiting">
+                    <div class="modal-header">
+                        <div class="dash-title">Waiting for card scan...</div>
+                    </div>
+                    <div class="modal-body d-flex align-items-center justify-content-center flex-column">
+                        <div class="spin"></div>
+                    </div>
+                </div>
+                <div class="modal-content hide" style="padding: 0; background-color: #333333;" id="create-user-success">
+                    <div class="modal-header">
+                        <div class="dash-title">User Created!</div>
+                    </div>
+                    <div class="modal-body d-flex justify-content-between">
+                        <div>
+                            <div class="lg-card-lgtitle" id="create-user-success-name">what</div>
+                            <div class="lg-card-desc"id="create-user-success-desc">what</div>
+                        </div>
+                        <img src="/static/images/cool-cat.jpg" alt="profile" id="create-user-pfp"
+                            style="height: 128px; max-width: 256px; border-radius: 8px;">
+                    </div>
+                </div>
             </div>
         </div>
         <!-- <hr class="w-100" /> -->
@@ -192,7 +242,7 @@
             </div>
         </section>
 
-        <hr style="margin: 2em 0 1em 0;"/>
+        <hr style="margin: 2em 0 1em 0;" />
 
         <!-- Sensors section -->
         <div class="section-title">Sensor Status</div>
@@ -323,7 +373,7 @@
                         <div class="mt-2 d-flex align-items-center">
                             <!-- TODO: Make this do something -->
                             <span class="text-secondary col-9">RSSI Threshold (dBm): </span>
-                            <input id="rssi-input" class="col-3 fav-input text-secondary fw-bold text-center"/>
+                            <input id="rssi-input" class="col-3 fav-input text-secondary fw-bold text-center" />
                         </div>
                     </div>
                     <div class="col-0 col-lg-3 d-none d-lg-block justify-content-center align-items-center">

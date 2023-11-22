@@ -148,6 +148,29 @@ User.loginAs = async (id) => {
     await fetch(`/login/${id}`, { method: "POST" });
 }
 
+// Show success message when user is created
+User.userCreated = async (user) => {
+    if (!user) {
+        // Show the form
+        $("#create-user-content").removeClass("hide");
+        $("#create-user-waiting").addClass("hide");
+        $("#create-user-success").addClass("hide");
+
+        $("#create-user-error").text("The ID card is already in use!");
+        return;
+    }
+
+    // Show the success
+    $("#create-user-content").addClass("hide");
+    $("#create-user-waiting").addClass("hide");
+    $("#create-user-success").removeClass("hide");
+
+    // Show a feedback
+    $("#create-user-success-name").text(user.name);
+    $("#create-user-success-desc").text(user.description);
+    $("#create-user-pfp").attr("src", user.avatar);
+}
+
 $(document).ready(async function () {
     $("#edit-favs-btn").click(() => {
         $("#edit-favs-btn").text() === "Edit" ? Favourites.edit() : Favourites.cancel();
@@ -182,4 +205,31 @@ $(document).ready(async function () {
     });
 
     $("#logout-btn").click(User.logout);
+
+    $("#create-user-modal").on("hidden.bs.modal", function () {
+        $("#create-user-content").removeClass("hide");
+        $("#create-user-success").addClass("hide");
+        $("#create-user-waiting").addClass("hide");
+    });
+
+    $("#create-user-form").on("submit", async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: '/create-user',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#create-user-content").addClass("hide");
+                $("#create-user-success").addClass("hide");
+                $("#create-user-waiting").removeClass("hide");
+            },
+            error: function (error) {
+                $("#create-user-error").text(error.responseText);
+            }
+        });
+    });
 });
