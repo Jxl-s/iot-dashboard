@@ -143,11 +143,6 @@ User.logout = async () => {
     await fetch("/logout", { method: "POST" });
 }
 
-// TODO: Remove this when RFID is added
-User.loginAs = async (id) => {
-    await fetch(`/login/${id}`, { method: "POST" });
-}
-
 // Show success message when user is created
 User.userCreated = async (user) => {
     if (!user) {

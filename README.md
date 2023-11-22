@@ -16,7 +16,7 @@ pip install -r requirements.txt
 npm install
 ```
 
-Run the following terminals simultaneously
+Make sure that the mosquitto broker is running, then run the following terminals simultaneously (on different terminals)
 1. Bluetooth packet listener
 ```bash
 sudo node ./bluetooth.js
@@ -24,10 +24,4 @@ sudo node ./bluetooth.js
 2. IoT Dashboard
 ```bash
 python app
-```
-
-## To create profiles
-Run the following command, and follow the steps and scan your card
-```bash
-python create_user.py
 ```

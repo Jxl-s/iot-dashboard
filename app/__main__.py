@@ -63,8 +63,6 @@ else:
 NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 
 # Load the user account (0 will indicate no logged in user)
-# TODO: Make this with the RFID reader
-
 user_id = 0
 user_info = get_user_by_id(user_id)
 
@@ -112,14 +110,6 @@ def logout():
     # User with ID 0 does not exist, so the profile will be None
     update_user(0)
     return "OK", 200
-
-
-# TODO: Remove when RFID is implemented
-@app.route("/login/<int:user_id>", methods=["POST"])
-def login(user_id):
-    update_user(user_id)
-    return "OK", 200
-
 
 # Changes the user's preference.
 @app.route("/set-favourites", methods=["POST"])
@@ -204,12 +194,14 @@ def on_create_user():
     if profile and not profile.filename.endswith((".png", ".jpg", ".jpeg")):
         return "Invalid profile", 400
 
-    # Upload the image
-    _, extension = os.path.splitext(os.path.basename(profile.filename))
-    random_name = generate_random_string(16) + extension
+    new_path = "/static/images/default-user.jpg"
+    if profile:
+        # Upload the image
+        _, extension = os.path.splitext(os.path.basename(profile.filename))
+        random_name = generate_random_string(16) + extension
 
-    new_path = os.path.join("./static/images/", random_name)
-    profile.save(new_path)
+        new_path = os.path.join("./static/images/", random_name)
+        profile.save(new_path)
 
     # Put this in the creating_user
     creating_user = {
@@ -248,9 +240,6 @@ def sensor_thread():
         if dht.readDHT11() == dht.DHTLIB_OK:
             SENSOR_VALUES["temperature"] = dht.temperature
             SENSOR_VALUES["humidity"] = dht.humidity
-
-        # TODO: Use the real values for light intensity and devices
-        # Light intensity handled by MQTT
 
         socketio.emit(
             "dht_update",
