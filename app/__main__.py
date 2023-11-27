@@ -356,8 +356,6 @@ def mqtt_thread():
 
     def on_devices(devices):
         global RSSI_ARRAY
-
-        devices = json.loads(devices)
         RSSI_ARRAY = devices
 
     # Make the client, initiate callbacks
@@ -366,7 +364,7 @@ def mqtt_thread():
     )
     client.set_callback(topic=LIGHT_TOPIC, callback=on_light, datatype=int)
     client.set_callback(topic=RFID_TOPIC, callback=on_rfid, datatype=str)
-    client.set_callback(topic=DEVICES_TOPIC, callback=on_devices, datatype=str)
+    client.set_callback(topic=DEVICES_TOPIC, callback=on_devices, datatype=json.loads)
 
     client.connect()
 
