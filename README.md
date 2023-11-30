@@ -31,7 +31,7 @@ Make sure that the mosquitto broker is running, then run the following terminals
 1. Bluetooth packet listener
 
 ```bash
-sudo node ./bluetooth.js
+sudo node bluetooth.js
 ```
 
 2. IoT Dashboard

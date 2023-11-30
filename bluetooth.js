@@ -17,8 +17,11 @@ client.on("connect", () => {
     // Listen to events
     const bluetoothDevices = {}
     barnowl.on('raddec', function (raddec) {
-        if (raddec.transmitterIdType !== Raddec.identifiers.TYPE_RND48) return;
-        bluetoothDevices[raddec.transmitterId] = [raddec.rssiSignature?.[0]?.rssi ?? -1000, raddec.creationTime];
+        const flattened = raddec.toFlattened();
+        if (flattened.transmitterIdType !== Raddec.identifiers.TYPE_RND48) return;
+
+        // In situations where values are missing, use defaults
+        bluetoothDevices[flattened.transmitterId] = [flattened.rssi ?? -1000, flattened.timestamp ?? Date.now()];
     });
 
     // Purge and print the map each interval
@@ -42,6 +45,7 @@ client.on("connect", () => {
         const rssiArray = Object.values(bluetoothDevices).map((value) => value[0]);
 
         // Send it through MQTT
+        console.log(`[Bluetooth] Sending RSSI array ... (${rssiArray.length} devices)`)
         client.publish("room/devices", JSON.stringify(rssiArray));
     }, SEND_DELAY);
 });
