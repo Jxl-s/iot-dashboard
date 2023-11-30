@@ -2,12 +2,28 @@
 
 Project for 420-531-VA (Internet of Things)
 
-## Prerequisites
+## Hardware Prerequisites
 
-- A Raspberry Pi 4 (or equivalent)
-- Python 3.10+
-- Node.js 18.0+
-- Mosquitto MQTT Broker 2.0+
+- Raspberry Pi 4 (or equivalent compatible board)
+- ESP8266 or ESP32 microcontroller
+
+- The GPIO are setup as follows
+
+| Function      | Pin (RPi) | Pin (ESP8266)                                                                               |
+|---------------|-----------|---------------------------------------------------------------------------------------------|
+| LED           | 17        |                                                                                             |
+| DHT11         | 4         |                                                                                             |
+| Motor EN      | 23        |                                                                                             |
+| Motor IN1     | 24        |                                                                                             |
+| Motor IN2     | 25        |                                                                                             |
+| Photoresistor |           | A0                                                                                          |
+| RFID Reader   |           | Refer to [this](https://www.aranacorp.com/en/using-an-rfid-module-with-an-esp8266/) article |
+
+## Software Prerequisites
+
+- [Python](https://www.python.org/downloads/) 3.10+
+- [Node.js](https://nodejs.org/en/download) 18.0+
+- [Mosquitto](https://mosquitto.org/download/) MQTT Broker 2.0+
 
 ## Getting Started
 
