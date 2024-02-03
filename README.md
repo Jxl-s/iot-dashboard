@@ -2,6 +2,8 @@
 
 Project for 420-531-VA (Internet of Things)
 
+<!-- add image here -->
+![IoT Dashboard](images/snapshot.png)
 ## Hardware Prerequisites
 
 - Raspberry Pi 4 (or equivalent compatible board)
@@ -55,3 +57,4 @@ sudo node bluetooth.js
 ```bash
 python app
 ```
+
